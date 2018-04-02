@@ -7,10 +7,6 @@ public class Automation {
 	private Integer start;
 	private Set <Integer> terminal;
 	private Map <Going,Set<Integer>> transitions;
-	// список нових станів !!
-	private ArrayList <Set<Integer>> metaState;
-	private Map <MetaGoing, Set<Integer>> metaTrans;
-	
 	//private int max;
 	
 	public Automation(Integer st, Set <Integer> term){
@@ -121,69 +117,67 @@ public class Automation {
 	}
 	// Детермінізація не получається: проблеми з Set<Integer>  в середині колекції !!!!  
 	//  --- можливий варіант Set<Integer> використовувати лише в невпорядкованих списках 
-	//   --- інший ввести клас State, що містить Set<Integer> і реалізує Comparable !!   
+	//   --- інший ввести клас State, що містить Set<Integer> і реалізує Comparable !!  
+	//
+	// список нових станів !!
+	private Set<State> metaStates;
+	private Map <MetaGoing, State> metaTrans;
+	
 	public Automation makeDA(){
 		Set<Integer> ts = new TreeSet<>();
 		Map <Going,Set<Integer>> tran = new TreeMap<>(); 
-		metaState = new ArrayList<>();
-		metaTrans = new HashMap<>();
-		Set <Integer> init = new TreeSet();  init.add(start); 
-		Set<Integer> beg = makeDA1(init);
-		System.out.println(" metaState = " + showMetaState());
+		metaStates = new TreeSet<>();
+		metaTrans = new TreeMap<>();
+		Set <Integer> init = new TreeSet();  init.add(start);
+		
+		State beg = makeDA1(init);
+		//System.out.println(" metaStates = " + metaStates.toString());
+		//System.out.println(" metaTrans = " + metaTrans.toString());
 		// ----------------coding-----------
-		Map<Set<Integer>,Integer> coding = new HashMap<>();
+		Map<State,Integer> coding = new TreeMap<>();
 		int i=1;
-		for(Set<Integer> ms:metaState) coding.put(ms,(Integer)(i++));
-		for(Set<Integer> ms:metaState){
-			boolean is = false;
-			for(Integer st:ms) if(terminal.contains(st)) is=true;
-			if (is) ts.add(coding.get(ms));
+		for(State ms:metaStates) coding.put(ms,(Integer)(i++));
+		for(State ms:metaStates){
+			if (ms.isTerm()) ts.add(coding.get(ms));
 		}
 		for(MetaGoing mg:metaTrans.keySet())
 			tran.put(new Going(coding.get(mg.state),mg.ch), buildSet1(coding.get(metaTrans.get(mg))));
-		
 		return new Automation(coding.get(beg), ts,tran);
 	}
 	
-	private Set<Integer> makeDA1(Set<Integer> ms){
-		System.out.println(" makeDA1(" + ms.toString()+ ")");
+	private State makeDA1(Set<Integer> ms){
+		//System.out.println(" makeDA1(" + ms.toString()+ ")");
 		Set<Integer> mrs = getFrontier(ms);
-		System.out.println(" makeDA1 + getFrontier(" + mrs.toString()+ ")");
-		if (!metaState.contains(mrs)){             // isInSetMetaState(metaState,mrs)){                  //metaState.contains(mrs)){
-			metaState.add(mrs);
+		State mrsSt = new State(mrs);
+	
+		if (!metaStates.contains(mrsSt)){  
+			//System.out.println(" metaTrans = " + metaTrans.toString());
+			metaStates.add(mrsSt);
 			for(Character ch:labels(mrs)){
 				Set<Integer> nms = new TreeSet<>();
 				for(Integer st:mrs){
 					Going g = new Going(st,ch);
 					if(transitions.containsKey(g))nms.addAll(transitions.get(g)); 
 				}
-				metaTrans.put(new MetaGoing(mrs,ch), makeDA1(nms));
+				//System.out.println(" ch = " + ch + " nms = " + nms.toString());
+				metaTrans.put(new MetaGoing(mrsSt,ch), makeDA1(nms));
 			};
 		}
-		return mrs;
+		return mrsSt;
 	}
-	
-	private boolean isInSetMetaState(Set <Set<Integer>> mss, Set<Integer> ms){
-		boolean no = true;
-		Iterator <Set<Integer>> ims = mss.iterator();
-		while(no && ims.hasNext()){
-			Set<Integer> ms1=ims.next();
-			if(ms1.equals(ms)) no = false;
-		}
-		return !no;
-	}
-	
 	
 	// будує множину всіх станів, що досяжні по порожнім переходам + заключні !!!
 	private Set<Integer> getFrontier(Set<Integer> ms){
 		Set<Integer> fr = new TreeSet<>();
 		Queue<Integer> test = new ArrayDeque<>();
 		test.addAll(ms);
+		//System.out.println(" ms = "+ ms.toString() + " test = " + test.toString());
 		while(!test.isEmpty()){
 			Integer st = test.remove();
 			Going g = new Going(st,(Character)('\0'));
 			if(isFrontier(st)) fr.add(st);
 			if(transitions.containsKey(g)) test.addAll(transitions.get(g));
+			//System.out.println(" fr = "+ fr.toString() + " test = " + test.toString());
 		}
 		return fr;
 	}
@@ -191,22 +185,20 @@ public class Automation {
 	private Set<Character> labels(Set<Integer> ms){
 		Set<Character> sc = new TreeSet<>();
 		for(Going g:transitions.keySet())
-			if(ms.contains(g.state) && g.ch.equals((Character)'\0')) sc.add(g.ch);
+			if(ms.contains(g.state) && !g.ch.equals((Character)'\0')) sc.add(g.ch);
 		return sc;
 	}
-	
-	
+		
 	private boolean isFrontier(Integer s){
 		boolean no=true;
 		Iterator trB = transitions.keySet().iterator();
 		while(no && trB.hasNext()){
 			Going g = (Going)trB.next();
-			if(g.state.equals(s))no = ((g.ch == '\0') || !terminal.contains(s)) ;
+			if(g.state.equals(s))no = (g.ch == '\0');
 		}
-		return !no;
+		return !no || terminal.contains(s);
 	}
-	
-	
+		
 	public String toString(){
 		String r= "Automation: start=" + start + " final=" + Arrays.toString(terminal.toArray());
 		r += " transition=[\n   ";
@@ -229,7 +221,56 @@ public class Automation {
 			}
 		return b1 && b2 && b3;
 	}
-	private  class  Going implements Comparable<Going>{
+	
+	// 
+	class State implements Comparable<State>{
+		Set<Integer> st;
+		State(){
+			st = new TreeSet<Integer>();
+		}
+		State(Set<Integer> s){st = s;}
+		public int compareTo(State ns){ 
+			int r = st.size()- ns.st.size();
+			if (r==0) {
+				Iterator<Integer> sti = st.iterator();
+				Iterator<Integer> nsi = ns.st.iterator();
+				while((r==0) && sti.hasNext()){
+					Integer is = sti.next(); 
+					Integer in = nsi.next();
+					r = is-in;
+				}
+			}
+			//System.out.println("State compare " + this.toString() + " ? " + ns.toString() + " = " + r);
+			return r;
+		}
+		public boolean isTerm(){
+			boolean is = false;
+			for(Integer t:st) if(terminal.contains(t)) is=true;
+			return is;
+		}
+		public String toString(){
+			return "{" + st.toString() + "}";
+		}
+	}
+	
+	class  MetaGoing implements Comparable<MetaGoing>{
+		State state;
+		Character ch;
+		MetaGoing(State ms, Character c){
+			state = ms; ch = c;
+		}
+		public int compareTo(MetaGoing g){ 
+			int r = state.compareTo(g.state);
+			if (r==0) r = ch-g.ch;
+			return r;
+		}
+		@Override
+		public String toString() {
+			return "MetaGoing [state=" + state + ", ch=" + ch + "]";
+		}
+	}
+	
+	class  Going implements Comparable<Going>{
 	//private class  Going{
 		Integer state;
 		Character ch;
@@ -241,21 +282,13 @@ public class Automation {
 			if (r==0) r = ch-g.ch;
 			return r;
 		}
+		@Override
+		public String toString() {
+			return "Going (state=" + state + ", ch=" + (ch==0?"Eps":ch)+ ")";
+		}
 	}
 	
-	private class  MetaGoing{
-		Set<Integer> state;
-		Character ch;
-		MetaGoing(Set <Integer> ms, Character c){
-			state = ms; ch = c;
-		}
-		/*
-		public int compareTo(MetaGoing g){ 
-			int r =                  //state-g.state;
-			if (r==0) r = ch-g.ch;
-			return r;
-		}*/
-	}
+	
 	
 	private int[] merge(int[] s1, int[] s2){
 		List<Integer> w = new ArrayList<>();
@@ -276,10 +309,55 @@ public class Automation {
 		for(i=1; i<res.length; i++) res[i] = w.get(i);
 		return res;
 	}
-    
+   /* 
 	private String showMetaState(){
 		String r="[";
 		for(Set<Integer> is:metaState) r += is.toString(); 
 		return r+"]";
+	}*/
+	
+	/*
+	Going g = new Going(1,'\0');
+	Going g1 = new Going(1,'x');
+	Set<Going> gs = transitions.keySet();
+	System.out.println("  this Autom = " +  this.toString()); 
+	System.out.println("  gs = " +  gs.toString()); 
+	System.out.println(" g = " + g.toString() + " g1 = " + g1.toString()+ " g.compareTo(g1) "  +  g.compareTo(g1));
+	System.out.println(" g = " + g.toString() + " transitions.containsKey(g) = " + transitions.containsKey(g));
+	*/
+	//Set <Integer> front = getFrontier(init);
+	/*
+	State inits = new State(init); 
+	State fronts = new State(front); 
+	System.out.println(" init = " + init.toString());
+	System.out.println(" inits = " + inits.toString());
+	System.out.println(" front = " + front.toString());
+	System.out.println(" fronts = " + fronts.toString());
+	System.out.println(" fronts ? inits = " + fronts.compareTo(inits));
+	*/
+	/*
+	Set <Integer> s1 = new TreeSet<>(); s1.add(9);s1.add(11); 
+	State st1 = new State(s1); 
+	Set <Integer> s2 = new TreeSet<>(); s2.add(5);s2.add(71); 
+	State st2 = new State(s2); 	
+	System.out.println( st1.toString() + " ? " + st2.toString() + " = " + st1.compareTo(st2));
+	*/
+	//System.out.println(" makeDA1(ms)  ms =  " + ms.toString() + " mrs = " + mrs.toString()+ " mrsSt = " + mrsSt.toString());
+	//System.out.println(" metaStates init = " + metaStates.toString() + " metaStates.contains(mrsSt) = " + metaStates.contains(mrsSt) );
+	//System.out.println("Add metaStates! = " + metaStates.toString());
+	//System.out.println(" mrs = " + mrs.toString()+" labels(mrs) = " + labels(mrs).toString());
+	/*
+	private boolean isInSetMetaState(Set <Set<Integer>> mss, Set<Integer> ms){
+		boolean no = true;
+		Iterator <Set<Integer>> ims = mss.iterator();
+		while(no && ims.hasNext()){
+			Set<Integer> ms1=ims.next();
+			if(ms1.equals(ms)) no = false;
+		}
+		return !no;
 	}
+	
+	*/
+	//System.out.println(" g = " + g.toString() + " transitions.containsKey(g) = " + transitions.containsKey(g)+
+	//		" transitions.get(g) = " + transitions.get(g) + " isFrontier(st) = " + isFrontier(st)   );
 }

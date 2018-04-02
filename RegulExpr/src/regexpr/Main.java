@@ -12,9 +12,32 @@ public class Main {
 		TestData td = new TestData();
 		System.out.println("re1 = " + td.re1().toString());
 		System.out.println("nda1=" + td.nda1().toString());
-		System.out.println("da1=" + td.da1().toString());
-		System.out.println("Build da1=" + td.da1().makeDA().toString());
 		
+		//td.nda1().makeDA();
+		//System.out.println("Build da1=");
+		
+		System.out.println("Build da1=" +td.da1().makeDA().toString());
+		System.out.println("da1=" + td.da1().toString());
+		
+		System.out.println("re2 = " + td.re2().toString());
+		System.out.println("nda2=" + td.nda2().toString());
+		System.out.println("Build da2=" +td.da2().makeDA().toString());
+		System.out.println("da2=" + td.da2().toString());
+		
+		System.out.println("re3 = " + td.re3().toString());
+		System.out.println("nda3=" + td.nda3().toString());
+		System.out.println("Build da3=" +td.da3().makeDA().toString());
+		System.out.println("da3=" + td.da3().toString());
+		
+		System.out.println("re4 = " + td.re4().toString());
+		System.out.println("nda4=" + td.nda4().toString());
+		System.out.println("Build da4=" +td.da4().makeDA().toString());
+		System.out.println("da4=" + td.da4().toString());
+		
+		System.out.println("re5 = " + td.re5().toString());
+		System.out.println("nda5=" + td.nda5().toString());
+		System.out.println("Build da5=" +td.da5().makeDA().toString());
+		System.out.println("da5=" + td.da5().toString());
 		/*
 		System.out.println("re2 = " + td.re2().toString() );
 		System.out.println("nda2=" + td.nda2().toString());
