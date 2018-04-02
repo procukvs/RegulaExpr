@@ -18,6 +18,31 @@ public class RE {
 		wh = w; one = re1; two = re2;
 	}
 	
+	public Rtype getWh() {
+		return wh;
+	}
+	public char getCh() {
+		return ch;
+	}
+	public RE getOne() {
+		return one;
+	}
+	public RE getTwo() {
+		return two;
+	}
+	public RE simplify(){
+		switch(wh){
+		case Seq: return new RE(Rtype.Seq,one.simplify(),two.simplify());
+		case Alt: return new RE(Rtype.Alt,one.simplify(),two.simplify());
+		case Rep: return new RE(Rtype.Rep,one.simplify());
+		case Plus: return new RE(Rtype.Seq,one,new RE(Rtype.Rep,one));
+		case Opt: return new RE(Rtype.Alt,one,new RE());
+		default:  return this;
+		}
+	//	return r;
+		
+	}
+	
 	public String toString(){
 		String r ="";
 		switch(wh){

@@ -47,24 +47,46 @@ public class TestData {
 				      new RE(Rtype.Plus ,new RE('d'))       
 				     );
 	}
-	
+	// (a|b)*c
 	private int[][] go0 ={{1,0,3,5},{3,0,4}, {4,'c',2}, {5,0,7,9},
 			{6,0,3,5}, {7,'a',8}, {8,0,6}, {9,'b',10},{10,0,6}};
 	public Automation nda0(){
 		return new Automation(1,new int[]{2},go0);
 	}
-	
-	public Automation nda0X(){
-		int f1[] = new int[1]; f1[0] = 2;
-		Automation r = new Automation(1, f1);
-		int[] f2 = new int[2];
-		f2[0]=3; f2[1]=5; r.addGo(1, (char)0, f2);
-		f1[0] = 10; r.addGo(1, 'b', f1);
-		return r;
+	// (x|y)(1|2)
+	private int[][] go1 ={{1,0,7,5},{3,0,4}, {4,0,9,11}, {5,'x',6},
+			{6,0,3}, {7,'y',8}, {8,0,3}, {9,'1',10},{10,0,2}, {11,'2',12}, {12,0,2}};
+	public Automation nda1(){
+		return new Automation(1,new int[]{2},go1);
+	}
+	private int[][] goD1 ={{1,'x',2},{1,'y',2}, {2,'1',3}, {2,'2',3}};
+	public Automation da1(){
+		return new Automation(1,new int[]{3},goD1);
 	}
 	
-	
-	
+	// x'*	
+	private int[][] go2 ={{1,'x',3},{3,0,4}, {4,0,2,5}, {5,'\'',6},	{6,0,2,5}};
+	public Automation nda2(){
+		return new Automation(1,new int[]{2},go2);
+	}
+	// (ab|c)*
+	private int[][] go3 ={{1,0,2,3},{3,0,5,7}, {4,0,2,3}, {5,'a',9},
+			{6,0,4}, {7,'c',8}, {8,0,4}, {9,0,10}, {10,'b',6}};
+	public Automation nda3(){
+		return new Automation(1,new int[]{2},go3);
+	}
+	// (a?)a
+	private int[][] go4 ={{1,0,5,7},{3,0,4}, {4,'a',2}, {5,'a',6},
+			{6,0,3}, {7,0,8}, {8,0,3}};
+	public Automation nda4(){
+		return new Automation(1,new int[]{2},go4);
+	}
+	// (ab)?d+
+	private int[][] go5 ={{1,0,7,5},{3,0,4}, {4,'d',11}, {5,'a',9}, {6,0,3}, {7,0,8}, 
+			{8,0,3}, {9,0,10},{10,'b',6}, {11,0,12}, {12,0,2,13}, {13,'d',14},{14,0,2,13}};
+	public Automation nda5(){
+		return new Automation(1,new int[]{2},go5);
+	}
 	
 	public RE re6(){
 		return new RE('a');

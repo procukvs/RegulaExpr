@@ -27,6 +27,7 @@ public class Regular {
 		String[] words = p3.split("java8tiger 77    java6   mustang");
 		for (String w : words) System.out.println(".." + w + "..");
 	}
+	
 	public static void main(String[] args) {
 		Regular r = new Regular();
 		System.out.println("Hello Regular ....");
