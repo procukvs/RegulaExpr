@@ -1,6 +1,6 @@
 package regexpr.automata;
 
-public class RE {
+public class RE  { //implements Comparable <RE> {
 	Rtype wh;
 	char  ch=0;
 	RE    one, two;
@@ -30,6 +30,25 @@ public class RE {
 	public RE getTwo() {
 		return two;
 	}
+	/*
+	public int compareTo(RE er){
+		int res=wh.compareTo(er.wh);
+		if(res==0){
+			switch(wh){
+			case Alt:
+			case Seq: res= one.compareTo(er.one);
+			          if(res==0)res= two.compareTo(er.two);
+			          break;
+			case Rep: 
+			case Plus: 
+			case Opt: res= one.compareTo(er.one); break;
+			case Term: res= (ch-er.ch); break;
+			case Null: 
+			}
+		}
+		return res;
+	}
+	*/
 	public RE simplify(){
 		switch(wh){
 		case Seq: return new RE(Rtype.Seq,one.simplify(),two.simplify());

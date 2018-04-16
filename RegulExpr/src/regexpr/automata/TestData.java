@@ -47,6 +47,13 @@ public class TestData {
 				      new RE(Rtype.Plus ,new RE('d'))       
 				     );
 	}
+	public RE re5S(){
+		return new RE(Rtype.Seq,
+				      new RE(Rtype.Alt,
+				             new RE(Rtype.Seq, new RE('a'), new RE('b')),new RE()),
+				      new RE(Rtype.Seq ,new RE('d'), new RE(Rtype.Rep,new RE('d')))       
+				     );
+	}
 	// (a|b)*c
 	private int[][] go0 ={{1,0,3,5},{3,0,4}, {4,'c',2}, {5,0,7,9},
 			{6,0,3,5}, {7,'a',8}, {8,0,6}, {9,'b',10},{10,0,6}};
@@ -103,9 +110,17 @@ public class TestData {
 	public Automation da5(){
 		return new Automation(1,new int[]{2},goD5);
 	}
-	
-	
+	// x+
+	public RE ad1(){
+		return new RE(Rtype.Plus, new RE('x'));
+	}
+	// x?
+	public RE ad2(){
+		return new RE(Rtype.Opt, new RE('x'));
+	}
 	public RE re6(){
 		return new RE('a');
 	}
+	
+	
 }
