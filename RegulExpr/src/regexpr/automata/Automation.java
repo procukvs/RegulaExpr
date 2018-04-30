@@ -1,6 +1,6 @@
 package regexpr.automata;
 import java.util.*;
-import java.util.stream.*;
+//import java.util.stream.*;
 
 public class Automation {
 	// стани автомату  числа > 0

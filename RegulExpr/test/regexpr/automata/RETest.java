@@ -5,8 +5,6 @@ import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import lambda.use.TestLambda;
-
 public class RETest {
 	static private TestData td;
 	@BeforeClass
