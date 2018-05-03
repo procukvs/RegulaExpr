@@ -1,20 +1,20 @@
 package regexpr.automata;
 
-public class RE  { //implements Comparable <RE> {
+public class Rexpr  { //implements Comparable <RE> {
 	Rtype wh;
 	char  ch=0;
-	RE    one, two;
+	Rexpr    one, two;
 	
-	RE() { 
+	Rexpr() { 
 		wh = Rtype.Null; 
 	}
-	RE (char c){
+	Rexpr (char c){
 		wh = Rtype.Term; ch=c;
 	}
-	RE(Rtype w, RE re){
+	Rexpr(Rtype w, Rexpr re){
 		wh = w; one = re;
 	}
-	RE(Rtype w, RE re1, RE re2){
+	Rexpr(Rtype w, Rexpr re1, Rexpr re2){
 		wh = w; one = re1; two = re2;
 	}
 	
@@ -24,10 +24,10 @@ public class RE  { //implements Comparable <RE> {
 	public char getCh() {
 		return ch;
 	}
-	public RE getOne() {
+	public Rexpr getOne() {
 		return one;
 	}
-	public RE getTwo() {
+	public Rexpr getTwo() {
 		return two;
 	}
 	/*
@@ -49,13 +49,13 @@ public class RE  { //implements Comparable <RE> {
 		return res;
 	}
 	*/
-	public RE simplify(){
+	public Rexpr simplify(){
 		switch(wh){
-		case Seq: return new RE(Rtype.Seq,one.simplify(),two.simplify());
-		case Alt: return new RE(Rtype.Alt,one.simplify(),two.simplify());
-		case Rep: return new RE(Rtype.Rep,one.simplify());
-		case Plus: return new RE(Rtype.Seq,one,new RE(Rtype.Rep,one));
-		case Opt: return new RE(Rtype.Alt,one,new RE());
+		case Seq: return new Rexpr(Rtype.Seq,one.simplify(),two.simplify());
+		case Alt: return new Rexpr(Rtype.Alt,one.simplify(),two.simplify());
+		case Rep: return new Rexpr(Rtype.Rep,one.simplify());
+		case Plus: return new Rexpr(Rtype.Seq,one,new Rexpr(Rtype.Rep,one));
+		case Opt: return new Rexpr(Rtype.Alt,one,new Rexpr());
 		default:  return this;
 		}
 	//	return r;

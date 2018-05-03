@@ -1,6 +1,6 @@
 package regexpr.finite;
 
-public class TestData {
+public class TestDataFinite {
 	
 	// a+|b+
 	private int[][] go0 ={{0,'a',1}, {0,'b',2}, {1,'a',1}, {1,'b',3},

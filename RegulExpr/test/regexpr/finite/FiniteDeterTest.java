@@ -5,10 +5,10 @@ import org.junit.*;
 import regexpr.finite.*;
 
 public class FiniteDeterTest {
-	static private TestData td;
+	static private TestDataFinite td;
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		td = new TestData();
+		td = new TestDataFinite();
 	}
 	
 	@Test

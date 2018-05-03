@@ -1,20 +1,34 @@
 package lambda;
 import java.util.*;
+import java.util.stream.*;
+
 import lambda.use.*;
+
 
 public class MainLambda {
 	static Statistic st = new Statistic();
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception  {
 		// TODO Auto-generated method stub
-		// 1 - libraryWork,  2 - modellingWork
-		int work = 1;
+		// 1 - libraryWork,  2 - modellingWork, 3 - MandelbrotSet
+		int work = 3;
 		System.out.println("Hello, this is lambda !"); 
 		switch(work){
 		case 1 : libraryWork(); break;
-		case 2 : modellingWork(100000000);
+		case 2 : modellingWork(100000000);break;
+		case 3 : workMandelbrot();
 		}
 		
+	}
+	
+	public static void workMandelbrot()  throws Exception  {
+		Mandelbrot ms = new Mandelbrot();
+		st.beginStage("ParallelStream");
+		ms.parallelForm("mandelbrotPar.png");;
+		st.beginStage("SequentialStream");
+		ms.sequantialForm("mandelbrotTest.png");
+		st.endStage();
+		System.out.println(st.toString());
 	}
 	
 	public static void modellingWork(int N){

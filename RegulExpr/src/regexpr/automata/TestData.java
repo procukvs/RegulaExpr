@@ -3,55 +3,55 @@ package regexpr.automata;
 public class TestData {
 	//---------------------- examples
 	// (a|b)*c
-	public RE re0(){
-		return new RE(Rtype.Seq,
-					    new RE(Rtype.Rep,
-					           new RE(Rtype.Alt, new RE('a'), new RE('b'))),
-					    new RE('c')
+	public Rexpr re0(){
+		return new Rexpr(Rtype.Seq,
+					    new Rexpr(Rtype.Rep,
+					           new Rexpr(Rtype.Alt, new Rexpr('a'), new Rexpr('b'))),
+					    new Rexpr('c')
 					 );
 	}
 	// (x|y)(1|2)
-	public RE re1(){
-		return  new RE(Rtype.Seq,
-					       new RE(Rtype.Alt, new RE('x'), new RE('y')),
-					       new RE(Rtype.Alt, new RE('1'), new RE('2'))
+	public Rexpr re1(){
+		return  new Rexpr(Rtype.Seq,
+					       new Rexpr(Rtype.Alt, new Rexpr('x'), new Rexpr('y')),
+					       new Rexpr(Rtype.Alt, new Rexpr('1'), new Rexpr('2'))
 					  );
 	}
 	// x'*	
-	public RE re2(){
-		return new RE(Rtype.Seq, 
-					      new RE('x'),
-					      new RE(Rtype.Rep, new RE('\''))
+	public Rexpr re2(){
+		return new Rexpr(Rtype.Seq, 
+					      new Rexpr('x'),
+					      new Rexpr(Rtype.Rep, new Rexpr('\''))
 					 );
 	}
 	// (ab|c)*
-	public  RE re3(){
-		return  new RE(Rtype.Rep, 
-				       new RE(Rtype.Alt, 
-				              new RE(Rtype.Seq, new RE('a'), new RE('b')), 
-						      new RE('c'))
+	public  Rexpr re3(){
+		return  new Rexpr(Rtype.Rep, 
+				       new Rexpr(Rtype.Alt, 
+				              new Rexpr(Rtype.Seq, new Rexpr('a'), new Rexpr('b')), 
+						      new Rexpr('c'))
 				       );
 	}
 	// (a?)a
-	public  RE re4(){
-		return new RE(Rtype.Seq,
-					   new RE(Rtype.Opt, new RE('a')), 
-					   new RE('a')
+	public  Rexpr re4(){
+		return new Rexpr(Rtype.Seq,
+					   new Rexpr(Rtype.Opt, new Rexpr('a')), 
+					   new Rexpr('a')
 					 );
 	}
 	// (ab)?d+
-	public RE re5(){
-		return new RE(Rtype.Seq,
-				      new RE(Rtype.Opt,
-				             new RE(Rtype.Seq, new RE('a'), new RE('b'))),
-				      new RE(Rtype.Plus ,new RE('d'))       
+	public Rexpr re5(){
+		return new Rexpr(Rtype.Seq,
+				      new Rexpr(Rtype.Opt,
+				             new Rexpr(Rtype.Seq, new Rexpr('a'), new Rexpr('b'))),
+				      new Rexpr(Rtype.Plus ,new Rexpr('d'))       
 				     );
 	}
-	public RE re5S(){
-		return new RE(Rtype.Seq,
-				      new RE(Rtype.Alt,
-				             new RE(Rtype.Seq, new RE('a'), new RE('b')),new RE()),
-				      new RE(Rtype.Seq ,new RE('d'), new RE(Rtype.Rep,new RE('d')))       
+	public Rexpr re5S(){
+		return new Rexpr(Rtype.Seq,
+				      new Rexpr(Rtype.Alt,
+				             new Rexpr(Rtype.Seq, new Rexpr('a'), new Rexpr('b')),new Rexpr()),
+				      new Rexpr(Rtype.Seq ,new Rexpr('d'), new Rexpr(Rtype.Rep,new Rexpr('d')))       
 				     );
 	}
 	// (a|b)*c
@@ -111,15 +111,15 @@ public class TestData {
 		return new Automation(1,new int[]{2},goD5);
 	}
 	// x+
-	public RE ad1(){
-		return new RE(Rtype.Plus, new RE('x'));
+	public Rexpr ad1(){
+		return new Rexpr(Rtype.Plus, new Rexpr('x'));
 	}
 	// x?
-	public RE ad2(){
-		return new RE(Rtype.Opt, new RE('x'));
+	public Rexpr ad2(){
+		return new Rexpr(Rtype.Opt, new Rexpr('x'));
 	}
-	public RE re6(){
-		return new RE('a');
+	public Rexpr re6(){
+		return new Rexpr('a');
 	}
 	
 	

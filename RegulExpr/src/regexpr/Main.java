@@ -1,14 +1,65 @@
 package regexpr;
 
 import regexpr.use.*;
+
+import java.util.Collections;
+
 import regexpr.automata.*;
+import regexpr.finite.*;
 
 public class Main {
     // https://github.com/procukvs/RegulaExpr.git
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		System.out.println("Work with regular expression!");
+		// 0 - onlyRegular, 1 - automata (Haskell),  2 - finite(Classic), 
+		// 3 - identification (clasic RE), 4 - machineFailure, 5-suffixTree 
+		//
+		int work = 2;
 		System.out.println("Hello Regular ....");
+		switch(work){
+		case 0: break;
+		case 1 : automationWork(); break;
+		case 2 : finiteWork();break;
+		case 3 : 
+		}
+		//r.simpleWork();
+		
+	}
+	
+	public static void finiteWork(){
+		System.out.println("Deter+NonDeter ....");
+		TestDataFinite tdf = new TestDataFinite();
+		/*
+		FiniteDeter da0 = tdf.da0();
+		String[] wd = {"aaaa","","bbb","aab", "cc"};
+		System.out.println("da0=" + da0.toString());
+		System.out.println("accepts: da0");
+		for(int i=0;i<wd.length;i++){
+			System.out.println("...." + wd[i] + " " + da0.accepts(wd[i]));	
+		}
+		*/
+		FiniteNondeter nda0 = tdf.nda0();
+		FiniteNondeter nda1 = tdf.nda1();
+		System.out.println("nda0=" + nda0.toString());
+		System.out.println("da0W=" + nda0.buildDeter().toString());
+		System.out.println("nda1=" + nda1.toString());
+		System.out.println("da1W=" + nda1.buildDeter().toString());
+		     //System.out.println("set1 = " + Collections.singleton((Integer)1));
+		     //System.out.println("close = " + nda0.closure(Collections.singleton((Integer)1)));
+		/*
+		String[] wd = {"aaaac","c","bbb","abc", "cc"};
+		System.out.println("accepts: nda0");
+		for(int i=0;i<wd.length;i++){
+			System.out.println("...." + wd[i] + " " + nda0.accepts(wd[i]));	
+		}
+		*/
+		      //FiniteNondeter nda1 = tdf.nda1();
+		        //System.out.println("nda1=" + nda1.toString());
+		//System.out.println("set1 = " + Collections.singleton((Integer)1));
+		//System.out.println("close = " + nda1.closure(Collections.singleton((Integer)1)));	
+		
+	}
+	public static void automationWork(){
 		TestData td = new TestData();
 		System.out.println("re1 = " + td.re1().toString());
 		System.out.println("nda1=" + td.nda1().toString());
@@ -70,8 +121,6 @@ public class Main {
 		System.out.println("re5 = " + td.re5().toString());
 		System.out.println("nda5=" + td.nda5().toString());
 		*/
-		//r.simpleWork();
-		
 	}
 
 }

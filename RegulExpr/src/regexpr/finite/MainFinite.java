@@ -6,7 +6,7 @@ public class MainFinite {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		TestData td = new TestData();
+		TestDataFinite td = new TestDataFinite();
 		
 		System.out.println("Work with finite automations !");
 		FiniteNondeter nda1 = td.nda1();

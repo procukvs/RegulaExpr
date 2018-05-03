@@ -41,7 +41,7 @@ public class Automation {
 	}
 		
 	// реалізація makeNDA, як конструктора автомата за регулярним виразом 
-	public Automation(RE exp){
+	public Automation(Rexpr exp){
 		start = 1;   
 		terminal = new TreeSet<>();
 		terminal.add(2);
@@ -50,7 +50,7 @@ public class Automation {
 	}
 	// будує таблицю переходів, що реалізує вираз e
 	// beg+end - початковий і заключний стани, init - наступний стан для використання
-	private int make(RE e, int beg,int end, int nxt){
+	private int make(Rexpr e, int beg,int end, int nxt){
 		int next = nxt;
 		switch(e.getWh()){
 		case Null: addGoing(beg,(char)0, buildSet1(end)); break;

@@ -8,6 +8,12 @@ public class FiniteDeter {
 	private Set <Integer> terminal;
 	private Map <Going,Integer> transitions;
 
+	public FiniteDeter(int st, Set<Integer> term, Map <Going,Integer> tran){
+		start = st;	terminal = term;
+		transitions = tran;
+	}	
+	
+	// for testing
 	public FiniteDeter(int st, int[] term, int [][] tran){
 		start = st;
 		terminal = new TreeSet<>();
@@ -39,7 +45,7 @@ public class FiniteDeter {
 		if (is) is = terminal.contains(st);
 		return is;
 	}
-		
+	/*	
 	class  Going implements Comparable<Going>{
 		//private class  Going{
 		Integer state;
@@ -57,7 +63,7 @@ public class FiniteDeter {
 			return "Going (state=" + state + ", ch=" + (ch==0?"Eps":ch)+ ")";
 		}
 	}
-	
+	*/
 	public String toString(){
 		String r= "FiniteDeter: start=" + start + " final=" + Arrays.toString(terminal.toArray());
 		r += " transition=[\n   ";
