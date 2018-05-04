@@ -1,11 +1,10 @@
 package regexpr;
 
+import java.util.*;
 import regexpr.use.*;
-
-import java.util.Collections;
-
 import regexpr.automata.*;
 import regexpr.finite.*;
+import regexpr.identify.*;
 
 public class Main {
     // https://github.com/procukvs/RegulaExpr.git
@@ -14,17 +13,43 @@ public class Main {
 		// 0 - onlyRegular, 1 - automata (Haskell),  2 - finite(Classic), 
 		// 3 - identification (clasic RE), 4 - machineFailure, 5-suffixTree 
 		//
-		int work = 2;
+		int work = 3;
 		System.out.println("Hello Regular ....");
 		switch(work){
 		case 0: break;
 		case 1 : automationWork(); break;
 		case 2 : finiteWork();break;
-		case 3 : 
+		case 3 : identityWork();break;
 		}
 		//r.simpleWork();
 		
 	}
+	
+	public static void identityWork(){
+		System.out.println("Identify ....");
+		TestIdentity ti = new TestIdentity();
+		System.out.println("sre0 = " + ti.sre0());
+		System.out.println("re0 = " + ti.re0().toString());
+		System.out.println("fe0 = " + ti.fre0().toString());
+		System.out.println("Build fe0 = " + (new Finite(ti.re0())).toString());
+
+		
+		/*
+		System.out.println("sre10 = " + ti.sre10());
+		System.out.println("re10 = " + ti.re10().toString());
+		System.out.println("fe10 = " + ti.fre10().toString());	
+		System.out.println("Build fe10 = " + (new Finite(ti.re10())).toString());
+		
+		System.out.println("sre11 = " + ti.sre11());
+		System.out.println("re11 = " + ti.re11().toString());
+		System.out.println("fe11 = " + ti.fre11().toString());	
+		System.out.println("Build fe11 = " + (new Finite(ti.re11())).toString());
+		System.out.println("sre12 = " + ti.sre12());
+		System.out.println("re12 = " + ti.re12().toString());
+		System.out.println("fe12 = " + ti.fre12().toString());
+		System.out.println("Build fe12 = " + (new Finite(ti.re12())).toString());
+		*/	
+	}	
 	
 	public static void finiteWork(){
 		System.out.println("Deter+NonDeter ....");

@@ -44,7 +44,7 @@ public class FiniteNondeter {
 		//System.out.println(" nxt= " +  Arrays.toString(nxt.toArray()));
 		//Set<Integer> nxt = new TreeSet<>(closure(empty.get(start)));
 		Set<Integer> gos; 
-		while (!rs.isEmpty()){
+		while (!rs.isEmpty()&& !nxt.isEmpty()){
 			Character ch = rs.charAt(0);
 			rs = rs.substring(1);
 			gos = new TreeSet<>();
@@ -55,7 +55,8 @@ public class FiniteNondeter {
 			//System.out.println(" ch= " + ch + " gos= " +  Arrays.toString(gos.toArray()));
 			nxt = closure(gos);
 		}
-		for(Integer st:nxt) is = is || terminal.contains(st); 
+		if(nxt.isEmpty())
+			for(Integer st:nxt) is = is || terminal.contains(st); 
 		return is;
 	}
 	
