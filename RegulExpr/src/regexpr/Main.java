@@ -13,18 +13,50 @@ public class Main {
 		// 0 - onlyRegular, 1 - automata (Haskell),  2 - finite(Classic), 
 		// 3 - identification (clasic RE), 4 - machineFailure, 5-suffixTree 
 		//
-		int work = 3;
+		int work = 5;
 		System.out.println("Hello Regular ....");
 		switch(work){
 		case 0: break;
 		case 1 : automationWork(); break;
 		case 2 : finiteWork();break;
 		case 3 : identityWork();break;
+		case 4 : identityMach();break;
+		case 5 : suffixTree(); break;
 		}
 		//r.simpleWork();
 		
 	}
 	
+	public static void suffixTree(){
+		System.out.println("SuffixTree ....");
+		TestSuffix ts=new TestSuffix();
+		System.out.println(" t1=" + ts.t1().toString());
+		
+		//String beg="banana";
+		
+		//String beg="mississippi";
+		/*
+		for(int i=0; i<=beg.length(); i++){
+			String s = beg.substring(0, i);
+			System.out.println(".. s=" + s + "..");
+			System.out.println(".. SuffixTree(s)= \n" + (new SuffixTree(s)).toString()) ;
+		}
+		*/
+	}
+	
+	public static void identityMach(){
+		System.out.println("Identify Machine ....");
+	    String w= "aabbaab";
+	    Identify wi = new Identify(w);
+	    System.out.println("...." + w + "....");
+	    System.out.println(wi.toString());
+	    String text="aabbaa";
+	    //String text="aaabbaabcc";
+	    //String text="abaabaabbaab";
+	    System.out.println(" text=" + text + " => " + wi.find(text)); 
+	    
+	    
+	}
 	public static void identityWork(){
 		System.out.println("Identify ....");
 		TestIdentity ti = new TestIdentity();
@@ -32,7 +64,11 @@ public class Main {
 		System.out.println("re0 = " + ti.re0().toString());
 		System.out.println("fe0 = " + ti.fre0().toString());
 		System.out.println("Build fe0 = " + (new Finite(ti.re0())).toString());
-
+		//Regular r = new Regular();
+		System.out.println("accepts fe0 ac? = " +ti.fre0().accepts("ac"));
+		System.out.println("accepts fe0 abac? = " +ti.fre0().accepts("abac"));
+		System.out.println("accepts fe0 ad? = " +ti.fre0().accepts("ad"));
+		System.out.println("accepts fe0 c? = " +ti.fre0().accepts("c"));
 		
 		/*
 		System.out.println("sre10 = " + ti.sre10());

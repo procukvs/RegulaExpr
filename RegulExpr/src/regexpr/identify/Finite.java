@@ -95,7 +95,14 @@ public class Finite {
 			Integer s = query.iterator().next();
 			query.remove(s); //cls.add(s);
 			if (transitions.containsKey(s)){
-				Going go = transitions.get(s);
+				//Going go = transitions.get(s);
+				//for(int st:go.goEsp()){
+				for(int st:transitions.get(s).goEsp() )
+					if(!cls.contains(st)){
+						cls.add(st); query.add(st);
+					}
+			}
+				/*
 				switch(go.kind){
 				case 1: if(!cls.contains(go.fst)){
 					    	cls.add(go.fst); query.add(go.fst); 
@@ -108,7 +115,7 @@ public class Finite {
 				        }; break;
 				 default: break;       
 				}
-			}
+				*/
 		}
 		return cls;
 	}		
@@ -139,6 +146,15 @@ public class Finite {
 			default: return "-Eps->" + fst + "," + snd;	
 			}
 		}
+		int[] goEsp(){
+			int[] rs=new int[0];
+			switch(kind){
+			case 0: break;
+			case 1: rs = new int[1]; rs[0]=fst; break;
+			case 2: rs = new int[2]; rs[0]=fst; rs[1]=snd;
+			}
+			return rs;
+		}
 		/*
 		public int compareTo(Going g){ 
 			int r = kind-g.kind;
@@ -146,6 +162,32 @@ public class Finite {
 			return r;
 		}
 		*/
+		@Override
+	    public boolean equals(Object obj) {
+	        if (this == obj) return true;
+	        if (obj == null) return false;
+	        if (getClass() != obj.getClass()) return false;
+	        Going other = (Going) obj;
+	        if(kind!=other.kind)return false;
+	        if(kind==1 && fst!=other.fst)return false;
+	        //if(kind==2 && !(fst!=other.fst || snd!=other.snd))return false;
+	        if (kind==2){
+	        	if (!((fst==other.fst) && (snd==other.snd) ||
+	        		(fst==other.snd) && (snd==other.fst))) return false;
+	        }
+	        return true;
+		}    
+	}
+	@Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
+        Finite other = (Finite) obj;
+        if(!start.equals(other.start))return false;
+        if(!terminal.equals(other.terminal))return false;
+        if(!transitions.equals(other.transitions))return false;
+        return true;
+	}		
 
-	}	
 }

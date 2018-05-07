@@ -17,11 +17,13 @@ public class RETest {
 		String sre5 = "(ab|)dd*";
 		assertEquals("simplify", sre5, td.re5().simplify().toString());
 	}
+	
 	@Test
 	public void simplifyTest2() {
 		String sad1 = "xx*";
 		assertEquals("simplify-x+", sad1, td.ad1().simplify().toString());
 	}
+	
 	@Test
 	public void simplifyTest3() {
 		String sad2 = "(x|)";

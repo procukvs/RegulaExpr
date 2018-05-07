@@ -1,5 +1,6 @@
 package regexpr.identify;
 
+
 public class TestIdentity {
 	// (a|b)*c
 	public String sre0(){
@@ -16,6 +17,24 @@ public class TestIdentity {
 	public Finite fre0(){
 		return new Finite(1,new int[]{2},go0);
 	}
+	
+	// (ab)?d+
+	public RE re5(){
+		return new RE(4,
+				      new RE(7,
+				             new RE(4, new RE('a'), new RE('b'))),
+				      new RE(6 ,new RE('d'))       
+				     );
+	}
+	// (ab|)dd*
+	public RE re5S(){
+		return new RE(4,
+				      new RE(3,
+				             new RE(4, new RE('a'), new RE('b')),new RE(1)),
+				      new RE(4 ,new RE('d'), new RE(5,new RE('d')))       
+				     );
+	}	
+	
 	
 	// Empty ($) {}
 	public String sre10(){
@@ -49,5 +68,7 @@ public class TestIdentity {
 	private int[][] go12 ={{1,'a',2}};
 	public Finite fre12(){
 		return new Finite(1,new int[]{2},go12);
-	}			
+	}	
+	
+	
 }
