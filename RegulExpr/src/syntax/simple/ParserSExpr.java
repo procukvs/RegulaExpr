@@ -7,7 +7,7 @@ public class ParserSExpr {
 	// A -> +TA | -TA | Eps 
 	// T -> (S) | 0 | ... | 9  
 	public ParserSExpr(){
-		input = new Lexer("abc");
+		input = new Lexer("0123456789+-()");
 	}
 	
 	public boolean analys(String word){
@@ -17,17 +17,29 @@ public class ParserSExpr {
 			S();
 			match(Lexer.EOF);
 		} catch(SyntaxError ex){
-			System.out.println(ex.getMessage());
+			System.out.println("----Syntax ERROR: " + ex.getMessage());
 			return false;
 		}
 		return true;
 	}
 	
 	void S() throws SyntaxError{
+		T(); A();
+	}
+	void A() throws SyntaxError{
 		switch (next){
-		case 'a': next=input.next(); S(); match('a');  break;
-		case 'b': next=input.next(); S(); match('b');  break;
-		default: match('c');
+		case '+': next=input.next(); T(); A();  break;
+		case '-': next=input.next(); T(); A();  break;
+		default: break;
+		}
+	}
+	void T() throws SyntaxError{
+		switch (next){
+		case '(': next=input.next(); S(); match(')');  break;
+		case '0': case '1': case '2': case '3': case '4':
+		case '5': case '6':	case '7': case '8': case '9':	
+			next=input.next(); break;
+		default: throw new SyntaxError("Expecting one from \"0123456789()\", found " + input.getName(next));
 		}
 	}
 	void match(char c) throws SyntaxError{
