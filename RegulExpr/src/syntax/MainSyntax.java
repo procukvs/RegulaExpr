@@ -2,20 +2,28 @@ package syntax;
 
 import syntax.simple.*;
 import syntax.lang.*;
-import syntax.lang.SyntaxError;
+import syntax.grammar.*;
 
 public class MainSyntax {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+		// 0 - grammar
 		// 1 - simple, 2 - language: Expr 
-		//
-		int work = 2;
+		// 
+		int work = 0;
 		System.out.println("Hello Syntax ....");
 		switch(work){
-		case 0: break;
+		case 0: workGrammar(); break;
 		case 1 : simpleGrammar(); break;
 		case 2 : langExpr(); break;
 		}
+	}
+	
+	public static void workGrammar(){
+		char[] lS = {'S','S','S','T','T'};
+		String[] rS ={"S+T","S-T", "T","(S)","d"};
+		Grammar sExpr = new Grammar(lS,rS);
+		System.out.println(sExpr.toString());
 	}
 	
 	public static void langExpr(){
