@@ -4,6 +4,8 @@ import syntax.simple.*;
 import syntax.lang.*;
 import syntax.grammar.*;
 
+import java.util.*;
+
 public class MainSyntax {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -20,15 +22,32 @@ public class MainSyntax {
 	}
 	
 	public static void workGrammar(){
-		//char[] lS = {'S','S','S','T','T'};
-		//String[] rS ={"S+T","S-T", "T","(S)","d"};
-		char[] lS = {'S','S','S','T','T','T','T','F','F'};
-		String[] rS ={"S+T","S-T", "T", "T*F", "T/F", "T%F", "F", "(S)","d"};
+		char[] lS = {'S','S','S','T','T'};
+		String[] rS ={"S+T","S-T", "T","(S)","d"};
+		
+		//char[] lS = {'S','S','S','T','T','T','T','F','F'};
+		//String[] rS ={"S+T","S-T", "T", "T*F", "T/F", "T%F", "F", "(S)","d"};
 		Grammar sExpr = new Grammar(lS,rS);
 		System.out.println(sExpr.toString());
 		System.out.println("Left recurtion ? - " + sExpr.leftRecursion());
 		sExpr.removeLeft();
 		System.out.println(sExpr.toString());
+		sExpr.buildFst();
+		System.out.println("fst=" + sExpr.fst.toString());
+		
+		/*
+		Set<Character> ns = new TreeSet<>();
+		System.out.println("Set ns0 = " + ns.toString());
+		ns.add('A');
+		System.out.println("Set ns1 = " + ns.toString());
+		ns.add('5');
+		System.out.println("Set ns2 = " + ns.toString());
+		ns.add('$');
+		System.out.println("Set ns3 = " + ns.toString());
+		ns.remove('$');
+		System.out.println("Set ns2 = " + ns.toString());
+		
+		*/
 	}
 	
 	public static void langExpr(){

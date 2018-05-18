@@ -7,6 +7,7 @@ public class Grammar {
 	Character start;
 	Set<Character> nonterminals, terminals;
 	ArrayList<Production> product;
+	public Map<Character,Set<Character>> fstp, fst, nstp, nst;
 	
 	
 	
@@ -68,6 +69,45 @@ public class Grammar {
 			}
 		} while (ln!=null);
 	}
+	
+	public void buildFst(){
+		fstp = new TreeMap<>();
+		fst  = new TreeMap<>();
+		// initial
+		for(Character c: terminals){
+			TreeSet sc = new TreeSet<>(); fstp.put(c, sc); 
+			sc.add(c); fst.put(c, sc);
+		}
+		for(Character c: nonterminals){
+			TreeSet sc = new TreeSet<>();
+			fstp.put(c, sc); fst.put(c, sc); 		
+		}
+		for(Production pr:product){
+			if(pr.rull.isEmpty()){
+				Set ns = fst.get(pr.non);
+				ns.add('$');	fst.put(pr.non,ns);
+			}
+		}
+		while (!fstp.equals(fst)){
+			fstp= new TreeMap(fst);
+			for(Production pr:product){
+				Character n = pr.non;
+				Set<Character> ns = fstp.get(n);
+				String rull = pr.rull;
+				Boolean go = true;
+				int i=0;
+				while (i<rull.length() && go){
+					Set<Character> cs = fstp.get((Character)rull.charAt(i));
+					go = cs.contains('$');
+					if(go) cs.remove('$');
+					ns.addAll(cs); i++;
+				}
+				if (i==rull.length() && go) ns.add('$');
+				fst.put(n,ns);
+			}
+		}
+	}
+	
 	
 	private char newNonterminal(){
 		char r = 'A';
