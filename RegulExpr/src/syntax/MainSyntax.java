@@ -20,9 +20,14 @@ public class MainSyntax {
 	}
 	
 	public static void workGrammar(){
-		char[] lS = {'S','S','S','T','T'};
-		String[] rS ={"S+T","S-T", "T","(S)","d"};
+		//char[] lS = {'S','S','S','T','T'};
+		//String[] rS ={"S+T","S-T", "T","(S)","d"};
+		char[] lS = {'S','S','S','T','T','T','T','F','F'};
+		String[] rS ={"S+T","S-T", "T", "T*F", "T/F", "T%F", "F", "(S)","d"};
 		Grammar sExpr = new Grammar(lS,rS);
+		System.out.println(sExpr.toString());
+		System.out.println("Left recurtion ? - " + sExpr.leftRecursion());
+		sExpr.removeLeft();
 		System.out.println(sExpr.toString());
 	}
 	
