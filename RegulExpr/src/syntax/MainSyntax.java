@@ -20,6 +20,12 @@ public class MainSyntax {
 		case 2 : langExpr(); break;
 		}
 	}
+
+	public static String inString(Set<Character>cs){
+		StringBuilder sb = new StringBuilder();
+		for(char c:cs) sb.append(c);
+		return sb.toString();
+	}
 	
 	public static void workGrammar(){
 		char[] lS = {'S','S','S','T','T'};
@@ -27,14 +33,40 @@ public class MainSyntax {
 		
 		//char[] lS = {'S','S','S','T','T','T','T','F','F'};
 		//String[] rS ={"S+T","S-T", "T", "T*F", "T/F", "T%F", "F", "(S)","d"};
+		//char[] lS = {'S', 'S', 'S'};
+		//String[] rS = {"aSa", "bSb", ""};
+		//char[] lS = {'S', 'S', 'S'};
+		//String[] rS = {"aSa", "bSb", "c"};		
 		Grammar sExpr = new Grammar(lS,rS);
 		System.out.println(sExpr.toString());
 		System.out.println("Left recurtion ? - " + sExpr.leftRecursion());
 		sExpr.removeLeft();
 		System.out.println(sExpr.toString());
+		Set<Character> terms = sExpr.getTerminals();
+		boolean isll1 = sExpr.isLL1();
+		System.out.println("isLL1 = " + isll1);
+		System.out.println("test=" + sExpr.test.toString());
+		if (!isll1){
+			System.out.println("nxt=" + sExpr.nxt.toString());	
+			String testS = sExpr.terrors.toString();
+			System.out.println("terrors = " + testS);
+		}
+		/*
+		System.out.println(inString(terms)+ '$' + inString(sExpr.getNonterminals()));
+		Character c1 = 'c';
+		Character b = 'N';
+		System.out.println(""+c1+b);
+		*/
+		
+		/*
 		sExpr.buildFst();
 		System.out.println("fst=" + sExpr.fst.toString());
-		
+		sExpr.buildNxt();
+		System.out.println("nxt=" + sExpr.nxt.toString());	
+		String[] wd= {"T", "A", "AT","+S"};
+		for(int i=0; i<wd.length; i++)
+			System.out.println("wd=\"" + wd[i] + "\" first=" + sExpr.first(wd[i]).toString());
+		*/
 		/*
 		Set<Character> ns = new TreeSet<>();
 		System.out.println("Set ns0 = " + ns.toString());
