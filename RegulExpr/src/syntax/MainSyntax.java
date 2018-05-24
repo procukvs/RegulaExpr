@@ -10,14 +10,15 @@ public class MainSyntax {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		// 0 - grammar
-		// 1 - simple, 2 - language: Expr 
-		// 
-		int work = 0;
+		// 1 - simple, 2 - GrammarLL1
+		// 3 - language: Expr 
+		int work = 2;
 		System.out.println("Hello Syntax ....");
 		switch(work){
 		case 0: workGrammar(); break;
 		case 1 : simpleGrammar(); break;
-		case 2 : langExpr(); break;
+		case 2 : grammarLL1(); break;
+		case 3 : langExpr(); break;
 		}
 	}
 
@@ -27,22 +28,56 @@ public class MainSyntax {
 		return sb.toString();
 	}
 	
+	public static void grammarLL1(){
+		char[] lS1 = {'S','S','S','T','T'};
+		String[] rS1 ={"S+T","S-T", "T","(S)","d"};
+		char[] lS2 = {'S', 'S', 'S'};
+		String[] rS2 = {"aSa", "bSb", ""};
+		char[] lS3 = {'S', 'S', 'S'};
+		String[] rS3 = {"aSa", "bSb", "c"};	
+		char[] lS4 = {'S','S','S','T','T','T','T','F','F'};
+		String[] rS4 ={"S+T","S-T", "T", "T*F", "T/F", "T%F", "F", "(S)","d"};
+		String[] name = {"sExpr", "nPal", "lPal", "fullExpr"};
+		GrammarLL1[] gram = {new GrammarLL1(lS1,rS1), new GrammarLL1(lS2,rS2),
+					         new GrammarLL1(lS3,rS3), new GrammarLL1(lS4,rS4)};
+		for( int i=0; i<gram.length; i++){
+			System.out.println("---" + name[i] + "---" );
+			System.out.println(gram[i].toString());	
+			boolean lfrec = gram[i].leftRecursion();
+			System.out.println("Left recurtion ? - " + lfrec);
+			if(lfrec){
+				gram[i].removeLeft();
+				System.out.println("Without lr ==" + gram[i].toString());
+			}
+			boolean isll1 = gram[i].isLL1();
+			System.out.println("isLL1 = " + isll1);
+			
+			if (!isll1){
+				System.out.println("nxt=" + gram[i].nxt.toString());	
+				String testS = gram[i].terrors.toString();
+				System.out.println("terrors = " + testS);
+			} else{
+				System.out.println("test=" + gram[i].test.toString());
+			}
+			
+		}
+	}
+	
 	public static void workGrammar(){
 		char[] lS = {'S','S','S','T','T'};
 		String[] rS ={"S+T","S-T", "T","(S)","d"};
 		
 		//char[] lS = {'S','S','S','T','T','T','T','F','F'};
 		//String[] rS ={"S+T","S-T", "T", "T*F", "T/F", "T%F", "F", "(S)","d"};
-		//char[] lS = {'S', 'S', 'S'};
-		//String[] rS = {"aSa", "bSb", ""};
-		//char[] lS = {'S', 'S', 'S'};
-		//String[] rS = {"aSa", "bSb", "c"};		
+	
+
 		Grammar sExpr = new Grammar(lS,rS);
 		System.out.println(sExpr.toString());
 		System.out.println("Left recurtion ? - " + sExpr.leftRecursion());
 		sExpr.removeLeft();
 		System.out.println(sExpr.toString());
 		Set<Character> terms = sExpr.getTerminals();
+		/*
 		boolean isll1 = sExpr.isLL1();
 		System.out.println("isLL1 = " + isll1);
 		System.out.println("test=" + sExpr.test.toString());
@@ -51,6 +86,7 @@ public class MainSyntax {
 			String testS = sExpr.terrors.toString();
 			System.out.println("terrors = " + testS);
 		}
+		*/
 		/*
 		System.out.println(inString(terms)+ '$' + inString(sExpr.getNonterminals()));
 		Character c1 = 'c';

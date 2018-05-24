@@ -6,13 +6,11 @@ public class Grammar {
 	// 
 	Character start;
 	Set<Character> nonterminals, terminals;
-	public Map<String,Set<Integer>> terrors;
-	public Map<String,Integer> test;
-	//String nontermS,termS;
-	//Set<Integer> []test;
 	ArrayList<Production> product;
-	public Map<Character,Set<Character>> fst, nxt;
 	
+	//public Map<Character,Set<Character>> fst, nxt;  //....
+	//public Map<String,Set<Integer>> terrors;  //...
+	//public Map<String,Integer> test;          //....	
 	// for testing	
 	public Grammar(char[] left, String[] right){
 		product = new ArrayList<> ();
@@ -47,8 +45,52 @@ public class Grammar {
 		return product;
 	}
 	
+	private Character findLeft(){
+		for(Production pr:product){
+			if(!pr.getRull().isEmpty() && (char)pr.getNon() == pr.getRull().charAt(0)) return pr.getNon();
+		}
+		return null;
+	}
+	public boolean leftRecursion(){ return (findLeft()!=null);}
+	
+	public void removeLeft(){
+		// A->As1 ... A->Asn  ----> N->s1N ... N->snN  N->Eps
+		// A->b1  ... A->bm   ----> A->b1N ... A->bmN
+		Character ln=null;
+		do{	ln=findLeft();
+			if(ln!=null){
+				char nn = newNonterminal();
+				for(int i=0;i<product.size();i++){
+					Production pr = product.get(i);
+					if(pr.getNon().equals(ln)){
+						if((char)pr.getNon() == pr.getRull().charAt(0)){
+							pr=new Production(nn,pr.getRull().substring(1)+nn);
+						}  else pr=new Production(pr.getNon(), pr.getRull()+nn);
+						product.set(i,pr);
+					}
+				}
+				product.add(new Production(nn,""));
+			}
+		} while (ln!=null);
+	}
+	
+	private char newNonterminal(){
+		char r = 'A';
+		while(nonterminals.contains(r)) r++;
+		nonterminals.add(r);
+		return r;
+	}
+	@Override
+	public String toString(){
+		String r = "";
+		String ns = Arrays.toString(nonterminals.toArray());
+		String ts = Arrays.toString(terminals.toArray());
+		String pl = Arrays.toString(product.toArray());  
+		return "[nonterminals -> " + ns + ",\n terminals -> " + ts 
+		+ ",\n product -> " + pl + ",\n start - " + start + "\n]";
+	}
+ /*	
 	public boolean isLL1(){
-		
 		if (leftRecursion())return false;
 		buildFst(); buildNxt();
 		terrors = new TreeMap<String,Set<Integer>>();
@@ -68,10 +110,6 @@ public class Grammar {
 				} else add(n,c,i);
 			}
 		}
-	    //boolean r = true;	
-	    //for(String s:terrors.keySet()){
-	   // 	r=r &&(terrors.get(s).size()< 2);
-	   // }
 		if(!terrors.isEmpty()) return false;
 		// make test - full!!!
 		Set<Character> termAll = new TreeSet<>(terminals);
@@ -111,13 +149,6 @@ public class Grammar {
 		si.add(r);
 		terrors.put(key, si);
 	}
-	/*
-	private String inString(Set<Character>cs){
-		StringBuilder sb = new StringBuilder();
-		for(char c:cs) sb.append(c);
-		return sb.toString();
-	}	
-	*/
 	public Set<Character> first(String wd){
 		Set<Character> rs = new TreeSet<>();
 		if (!wd.isEmpty()){
@@ -139,35 +170,6 @@ public class Grammar {
 		if(nonterminals.contains(c)) rs = nxt.get(c);
 		return rs;
 	}	
-	private Character findLeft(){
-		for(Production pr:product){
-			if(!pr.getRull().isEmpty() && (char)pr.getNon() == pr.getRull().charAt(0)) return pr.getNon();
-		}
-		return null;
-	}
-	public boolean leftRecursion(){ return (findLeft()!=null);}
-	
-	public void removeLeft(){
-		// A->As1 ... A->Asn  ----> N->s1N ... N->snN  N->Eps
-		// A->b1  ... A->bm   ----> A->b1N ... A->bmN
-		Character ln=null;
-		do{	ln=findLeft();
-			if(ln!=null){
-				char nn = newNonterminal();
-				for(int i=0;i<product.size();i++){
-					Production pr = product.get(i);
-					if(pr.getNon().equals(ln)){
-						if((char)pr.getNon() == pr.getRull().charAt(0)){
-							pr=new Production(nn,pr.getRull().substring(1)+nn);
-						}  else pr=new Production(pr.getNon(), pr.getRull()+nn);
-						product.set(i,pr);
-					}
-				}
-				product.add(new Production(nn,""));
-			}
-		} while (ln!=null);
-	}
-	
 	public void buildFst(){
 		Map<Character,Set<Character>> fstp;
 		//int st=0;
@@ -203,18 +205,14 @@ public class Grammar {
 				while (i<rull.length() && go){
 					Set<Character> cs = fstp.get((Character)rull.charAt(i));
 					go = cs.contains('$');
-					//for(Character c:cs)                 //******
-					//	if(!c.equals('$')) ns.add(c);   //******
 					addWithoutEps(ns,cs);
 					i++;
 				}
 				if (i==rull.length() && go) ns.add('$');
 				fst.put(n,ns);
 			}
-			//st++;
 		}
 	}
-
 	private Set<Character> addWithoutEps(Set<Character> bs, Set<Character> as){
 		for(Character c:as)                 //******
 			if(!c.equals('$')) bs.add(c);   //******
@@ -222,7 +220,6 @@ public class Grammar {
 	}
 	public void buildNxt(){
 		Map<Character,Set<Character>> nxtp;
-		//int st=0;
 		// nxtp + nxt - не повинні посилатися на ОДНУ і ТУ множину (бо вони змінюються !!!!)
 		nxtp = new TreeMap<>();
 		nxt  = new TreeMap<>();
@@ -242,7 +239,6 @@ public class Grammar {
 				String rull = pr.getRull();
 				int i=0;
 				while (i<rull.length()){
-					//System.out.println("i=" + i + " c= " + rull.charAt(i));
 					Character nt = (Character)rull.charAt(i);
 					if (nonterminals.contains(nt)){
 						Set<Character> cs = nxt.get(nt);			
@@ -264,25 +260,7 @@ public class Grammar {
 					i++;
 				}
 			}
-			//st++;
-			//System.out.println("st=" + st + "..fstp=" + fstp.toString());
-			//System.out.println("st=" + st + " ..fst=" + fst.toString());
 		}	
-	}
-	
-	private char newNonterminal(){
-		char r = 'A';
-		while(nonterminals.contains(r)) r++;
-		nonterminals.add(r);
-		return r;
-	}
-	@Override
-	public String toString(){
-		String r = "";
-		String ns = Arrays.toString(nonterminals.toArray());
-		String ts = Arrays.toString(terminals.toArray());
-		String pl = Arrays.toString(product.toArray());  
-		return "[nonterminals -> " + ns + ",\n terminals -> " + ts 
-		+ ",\n product -> " + pl + ",\n start - " + start + "\n]";
-	}
+	}	
+*/	
 }
