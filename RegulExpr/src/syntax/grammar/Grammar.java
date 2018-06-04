@@ -4,20 +4,16 @@ import java.util.*;
 
 public class Grammar {
 	// 
-	Character start;
-	Set<Character> nonterminals, terminals;
-	ArrayList<Production> product;
-	
-	//public Map<Character,Set<Character>> fst, nxt;  //....
-	//public Map<String,Set<Integer>> terrors;  //...
-	//public Map<String,Integer> test;          //....	
+	protected Character start;
+	protected Set<Character> nonterminals, terminals;
+	protected ArrayList<Production> product;
 	// for testing	
 	public Grammar(char[] left, String[] right){
 		product = new ArrayList<> ();
 		nonterminals = new TreeSet<>();
 		terminals = new TreeSet<>();
 		start = null;
-		for(int i=0;i<left.length; i++){
+		for(int i=0;i<left.length && i<right.length; i++){
 			char n = left[i];
 			if(i<right.length && Character.isUpperCase(n)){ 
 				String rull = right[i];
@@ -29,6 +25,9 @@ public class Grammar {
 				}
 				product.add(new Production(n,rull));
 			}
+		}
+		if(start==null) { // початковий нетермінал ЗАВЖДИ є!
+			start = 'S'; nonterminals.add('S');
 		}
 	}
 	
@@ -74,12 +73,61 @@ public class Grammar {
 		} while (ln!=null);
 	}
 	
+	// перевіряє, що список номерів продукцій задає деякий лівосторонній вивід в граматиці!
+	public boolean leftDerivation(ArrayList<Integer> dv){
+		boolean r=true;
+		Production pr; 
+		ArrayDeque<Character> sb = new ArrayDeque<>();
+		int i=0;
+		sb.push(start);
+		while(r && i<dv.size() ){
+			r = (dv.get(i)>=0 && dv.get(i) < product.size() && !sb.isEmpty());
+			if(r){
+				pr=product.get(dv.get(i++));
+				r = pr.getNon().equals(sb.peek());
+				if(r){
+					sb.pop();
+					for(int j=pr.getRull().length(); j>0; j--){
+						Character c = pr.getRull().charAt(j-1);
+						if (Character.isUpperCase(c))sb.push(c);
+					}
+					//i++;
+				}
+			}
+		}
+		return r;
+	}
+		
 	private char newNonterminal(){
 		char r = 'A';
 		while(nonterminals.contains(r)) r++;
 		nonterminals.add(r);
 		return r;
 	}
+	
+	public SynTree buildSynTree(ArrayList<Integer> dv){
+		SynTree tr = null;
+		if(leftDerivation(dv)){
+			tr = new SynTree(start);
+			buildInDepth(tr,0,dv);
+		}
+		return tr;
+	}
+	
+	private int buildInDepth(SynTree t, int k, ArrayList<Integer> dv){
+		if(Character.isUpperCase(t.getRoot()) && k < dv.size()) {
+			String rull = product.get(dv.get(k++)).getRull();
+			if(!rull.isEmpty())
+				for(int j=0; j<rull.length(); j++){
+					SynTree tr1 = new SynTree(rull.charAt(j));
+					t.addSon(tr1);
+					k = buildInDepth(tr1, k, dv);
+				}
+			else t.addSon(new SynTree());
+		}
+		return k;
+	}
+	
 	@Override
 	public String toString(){
 		String r = "";
@@ -89,6 +137,78 @@ public class Grammar {
 		return "[nonterminals -> " + ns + ",\n terminals -> " + ts 
 		+ ",\n product -> " + pl + ",\n start - " + start + "\n]";
 	}
+
+	/*
+	public boolean leftDerivation(ArrayList<Integer> dv){
+		boolean r=true;
+		Production pr; 
+		StringBuilder sb = new StringBuilder();
+		int i=0;
+		sb.append(start);
+		while(r && i<dv.size() ){
+			r = (dv.get(i)>=0 && dv.get(i) < product.size() && sb.length()> 0);
+			if(r){
+				pr=product.get(dv.get(i));
+				r = pr.getNon().equals(sb.charAt(sb.length()-1));
+				if(r){
+					sb.deleteCharAt(sb.length()-1);
+					for(int j=pr.getRull().length(); j>0; j--){
+						Character c = pr.getRull().charAt(j-1);
+						if (Character.isUpperCase(c))sb.append(c);
+					}
+					i++;
+				}
+			}
+		}
+		return r;
+	}
+	*/	
+	
+	
+	/*
+	private ArrayList<Integer> dv1;
+	private int it;
+	private void buildInDepth(SynTree t){
+		if(Character.isUpperCase(t.getRoot()) && it < dv1.size()) {
+			String rull = product.get(dv1.get(it++)).getRull();
+			if(!rull.isEmpty())
+				for(int j=0; j<rull.length(); j++){
+					SynTree tr1 = new SynTree(rull.charAt(j));
+					t.addSon(tr1);
+					buildInDepth(tr1);
+				}
+			else t.addSon(new SynTree());
+		}
+		//return null;
+	}
+	*/	
+	
+	/*
+	public boolean leftDerivation(int[] dv){
+		boolean r=true;
+		Production pr; 
+		StringBuilder sb = new StringBuilder();
+		int i=0;
+		sb.append(start);
+		while(r && i<dv.length ){
+			r = (dv[i]>=0 && dv[i] < product.size() && sb.length()> 0);
+			if(r){
+				pr=product.get(dv[i]);
+				r = pr.getNon().equals(sb.charAt(sb.length()-1));
+				if(r){
+					sb.deleteCharAt(sb.length()-1);
+					for(int j=pr.getRull().length(); j>0; j--){
+						Character c = pr.getRull().charAt(j-1);
+						if (Character.isUpperCase(c))sb.append(c);
+					}
+					i++;
+				}
+			}
+		}
+		return r;
+	}
+	*/
+	
  /*	
 	public boolean isLL1(){
 		if (leftRecursion())return false;

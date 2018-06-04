@@ -3,6 +3,7 @@ package syntax;
 import syntax.simple.*;
 import syntax.lang.*;
 import syntax.grammar.*;
+import syntax.descent.*; 
 
 import java.util.*;
 
@@ -12,13 +13,14 @@ public class MainSyntax {
 		// 0 - grammar
 		// 1 - simple, 2 - GrammarLL1
 		// 3 - language: Expr 
-		int work = 2;
+		int work = 4;
 		System.out.println("Hello Syntax ....");
 		switch(work){
 		case 0: workGrammar(); break;
 		case 1 : simpleGrammar(); break;
 		case 2 : grammarLL1(); break;
 		case 3 : langExpr(); break;
+		case 4 : descent(); break;
 		}
 	}
 
@@ -53,19 +55,27 @@ public class MainSyntax {
 			System.out.println("isLL1 = " + isll1);
 			
 			if (!isll1){
-				System.out.println("nxt=" + gram[i].nxt.toString());	
-				String testS = gram[i].terrors.toString();
+				System.out.println("nxt=" + gram[i].getNxt().toString());	
+				String testS = gram[i].getTerrors().toString();
 				System.out.println("terrors = " + testS);
 			} else{
-				System.out.println("test=" + gram[i].test.toString());
+				System.out.println("test=" + gram[i].getTest().toString());
 			}
 			
 		}
+		/*
+		String[] wd = {"d", "d-d", ""};
+		for(int j=0; j<wd.length; j++){
+			ArrayList dv = gram[3].analys(wd[j]);
+			System.out.println("word " + wd[j] + " is in language " + (dv !=null));
+			if (dv !=null) System.out.println(" dv = " + Arrays.toString(dv.toArray()));
+		}
+		*/
 	}
 	
 	public static void workGrammar(){
-		char[] lS = {'S','S','S','T','T'};
-		String[] rS ={"S+T","S-T", "T","(S)","d"};
+		char[] lS = {'S','S','S','T','T', 'T'};
+		String[] rS ={"S+T","S-T", "T","(S)","d", ""};
 		
 		//char[] lS = {'S','S','S','T','T','T','T','F','F'};
 		//String[] rS ={"S+T","S-T", "T", "T*F", "T/F", "T%F", "F", "(S)","d"};
@@ -73,10 +83,18 @@ public class MainSyntax {
 
 		Grammar sExpr = new Grammar(lS,rS);
 		System.out.println(sExpr.toString());
-		System.out.println("Left recurtion ? - " + sExpr.leftRecursion());
-		sExpr.removeLeft();
-		System.out.println(sExpr.toString());
-		Set<Character> terms = sExpr.getTerminals();
+		Integer[][] td = { {0,2,4,4}, {0,2,4,4,1}, {3}, {0,9}, {0,1,3}, {0,2},{0,2,5,4}};
+		for(int i=0; i<td.length; i++){
+			ArrayList<Integer> dr = new ArrayList<>(Arrays.asList(td[i])); 
+			System.out.println("derivation = " + dr.toString() + " is = " + sExpr.leftDerivation(dr)); 
+			if (sExpr.leftDerivation(dr))
+				System.out.println(sExpr.buildSynTree(dr));
+			
+		}
+		//System.out.println("Left recurtion ? - " + sExpr.leftRecursion());
+		//sExpr.removeLeft();
+		//System.out.println(sExpr.toString());
+		//Set<Character> terms = sExpr.getTerminals();
 		/*
 		boolean isll1 = sExpr.isLL1();
 		System.out.println("isLL1 = " + isll1);
@@ -180,5 +198,19 @@ public class MainSyntax {
 		}
 		*/	
 	}
+	public static void descent(){
+		System.out.println("Recursive descent ....");
+		//String[] st = new String[]{"c", "abba", "abb", "abbbaab"}; 
+		//ParserDG p = new ParserDG();
+		String[] st = new String[]{"0", "(1)", "a", "(((7+5)))", "6-6+7-9+(5)", "((9+1)*4+7)%5*6",
+                "+-2","+2", "-6*5/3-2"}; 
+        //ParserDExpr p = new ParserDExpr();		
+		//ParserDIter p = new ParserDIter();
+		ParserDEval p = new ParserDEval();
+		//String[] st = new String[]{"a", "(a)","(x|y)(a|b)", "xb*", "(ab|c)*", "(a?)a", "(ab)?d+", "(ab|c*", "(ab|c*)"}; 
+		//ParserRegul p = new ParserRegul();
+		for(int i=0; i<st.length;i++)
+			System.out.println("... " + st[i] + " analys: " + p.analys(st[i]));
+	}	
 	
 }

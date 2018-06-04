@@ -54,7 +54,8 @@ public class Mandelbrot {
 			x=t.x; y=t.y; color = findColor(t);
 		}
 		void addImage(){image.setRGB(x, y, color);}
-	}	
+	}
+	
 	// формуємо потік кординат усіх пікселів образу
 	private Stream<Coor> allPixel(){
 		return IntStream.range(0,width).boxed()

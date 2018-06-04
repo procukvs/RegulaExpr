@@ -11,7 +11,7 @@ public class MainLambda {
 	public static void main(String[] args) throws Exception  {
 		// TODO Auto-generated method stub
 		// 1 - libraryWork,  2 - modellingWork, 3 - MandelbrotSet
-		int work = 3;
+		int work = 1;
 		System.out.println("Hello, this is lambda !"); 
 		switch(work){
 		case 1 : libraryWork(); break;
@@ -63,6 +63,14 @@ public class MainLambda {
 		System.out.println(" Name books in publishers (Col): " + nameBooksC.toString());
 		Map <String, List<String>> nameBooksS = sw.nameOfBooksS(library.stream());
 		System.out.println(" Name books in publishers (Str): " + nameBooksS.toString());
+		
+		System.out.println("Use array+regular");
+		String[] ib = tl.libraryStr();
+		for(String s:ib)System.out.println(s);
+		Stream <Book>  bs = Stream.of(ib).map(Book::new); 
+		Map <String, Long> cntBooksSAr = sw.numberOfBooksS(bs);
+		System.out.println(" Counts books in publishers (ColArr): " + cntBooksSAr.toString());
+		
 	}
 
 }

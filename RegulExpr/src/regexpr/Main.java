@@ -10,21 +10,57 @@ public class Main {
     // https://github.com/procukvs/RegulaExpr.git
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		// 0 - onlyRegular, 1 - automata (Haskell),  2 - finite(Classic), 
-		// 3 - identification (clasic RE), 4 - machineFailure, 5-suffixTree 
-		//
-		int work = 5;
+		// 0 - String methods, 1 - use Regex, 
+		// 2 - automata (Haskell),  3 - finite(Classic), 
+		// 4 - identification (clasic RE), 5 - machineFailure, 6-suffixTree 
+		//  
+		int work = 0;
 		System.out.println("Hello Regular ....");
 		switch(work){
-		case 0: break;
-		case 1 : automationWork(); break;
-		case 2 : finiteWork();break;
-		case 3 : identityWork();break;
-		case 4 : identityMach();break;
-		case 5 : suffixTree(); break;
+		case 0 : stringMethods(); break;
+		case 1 : useRegex();break;
+		case 2 : automationWork(); break;
+		case 3 : finiteWork();break;
+		case 4 : identityWork();break;
+		case 5 : identityMach();break;
+		case 6 : suffixTree(); break;
 		}
 		//r.simpleWork();
 		
+	}
+	//  використовуються методи класу String 
+	public static void stringMethods(){
+		String re1 = "a+y";
+		String[] s = {"aay", "caayyacaayc"};
+		System.out.println("----------------\nВикористовуємо методи String і регулярний вираз " + re1); 
+		for(int i=0; i<s.length; i++){
+			System.out.println("...Рядок.. " + s[i] + ":"); 
+			System.out.println("Відповідає виразу " + re1 + ": " + s[i].matches(re1));
+			System.out.println("Розбиваємо за виразом " + re1 + ": " + Arrays.toString(s[i].split(re1)));
+			System.out.println("Заміняємо перше входження виразу " + re1 + " на W : " + s[i].replaceFirst(re1,"W"));
+			System.out.println("Заміняємо всі входження виразу " + re1 + " на W : " + s[i].replaceAll(re1,"W"));
+		}
+	}
+	
+	public static void useRegex(){
+		RegexUse ru = new RegexUse();
+	
+		String wem = "Adresses (email)for work: procukvs@gmail.com, tutorial@vogella.com and my@distedu.ukma.edu.ua, but not bad@ru  ";
+		System.out.println("----------------\nШукаємо ВСІ адреси (email) в \n" + wem); 
+		ru.findEmail(wem);
+		
+		String[] ss = {" -567 , +90   , -60 ", "-7 +-67", " 45 ", "", "  76  ,-2  "," +43  " };
+		System.out.println("----------------\nШукаємо суму ВСІХ цілих чисел в непорожньому списку");
+		//for(int i=0; i<ss.length; i++)	System.out.println("\"" + ss[i] + "\" = " + ru.listInt(ss[i]));
+		for(String s:ss) System.out.println("\"" + s + "\" = " + ru.listInt(s));
+	
+		String[] sd = {"0.567","-0.7","+-67","76.01e+2","1.04E2", "-2e-2","+43", "0.045E-7", "-5e10" };	
+		System.out.println("----------------\nРозпізнаємо дійсні числа");
+		for(int i=0; i<sd.length; i++){
+			System.out.println("\"" + sd[i] + "\" = " + ru.onlyDouble(sd[i]));
+			System.out.println("\"" + sd[i] + "\" - " + ru.parseDouble(sd[i]));
+		}	
+				
 	}
 	
 	public static void suffixTree(){

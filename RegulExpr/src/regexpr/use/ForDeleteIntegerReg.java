@@ -1,7 +1,7 @@
 package regexpr.use;
 import java.util.regex.*;
 
-public class IntegerReg {
+public class ForDeleteIntegerReg {
 	
 	public Integer listInt(String s){
 		Integer t=0, r = 0;

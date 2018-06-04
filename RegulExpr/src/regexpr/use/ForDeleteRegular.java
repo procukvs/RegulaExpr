@@ -1,8 +1,9 @@
 package regexpr.use;
 
+import java.util.Arrays;
 import java.util.regex.*;
 
-public class Regular {
+public class ForDeleteRegular {
 	public void simpleWork(){
 		System.out.println("Simple work with RegEx");
 		boolean b1 = Pattern.matches("a+y","aaay");
@@ -29,8 +30,18 @@ public class Regular {
 	}
 	
 	public static void main(String[] args) {
-		Regular r = new Regular();
+		ForDeleteRegular r = new ForDeleteRegular();
 		System.out.println("Hello Regular ....");
-		r.simpleWork();
+		//simpleWork();
+		String re1 = "a+y";
+		String[] s = {"aay", "caayyacaayc"};
+		System.out.println("Використовуємо методи String і регулярний вираз " + re1); 
+		for(int i=0; i<s.length; i++){
+			System.out.println("...Рядок.. " + s[i] + ":"); 
+			System.out.println("Відповідає виразу " + re1 + ": " + s[i].matches(re1));
+			System.out.println("Розбиваємо за виразом " + re1 + ": " + Arrays.toString(s[i].split(re1)));
+			System.out.println("Заміняємо перше входження виразу " + re1 + " на W : " + s[i].replaceFirst(re1,"W"));
+			System.out.println("Заміняємо всі входження виразу " + re1 + " на W : " + s[i].replaceAll(re1,"W"));
+		}
 	}
 }

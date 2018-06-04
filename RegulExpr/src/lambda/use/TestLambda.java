@@ -59,5 +59,14 @@ public class TestLambda {
 		return books;
 	};
 	
+	public String[] libraryStr(){
+		String[] informS = 
+			{"Buchman S. , 1977! , 140,  history: biography , Abatis Publishers ",
+			 "Buchman S. , 200 Years of German Humor , 107, history  , Schadenfreude Press ",
+			 "Hull H. : Hull K. , But I Did It Unconsciously , 510  , psychology  , Abatis Publishers "
+			}; 
+		return informS;			
+	}
+	
 
 }
