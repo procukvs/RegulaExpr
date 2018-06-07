@@ -2,11 +2,11 @@ package syntax.descent;
 
 public class Letter {
 	// $ - end of string 
-	String terminals;
+	//String terminals;
 	String input;
 	int p;
 	char c;
-	
+	/*
 	public Letter(String term){
 		terminals = term;
 	}
@@ -22,5 +22,13 @@ public class Letter {
 	}
 	void consume(){
 		if (p<input.length()) c=input.charAt(p++); else c='$';
+	}
+  */
+	public Letter(String input){
+		this.input=input; p=0; c=' ';
+	}
+	public char nextChar() {
+		if (p<input.length()) c=input.charAt(p++); else c='$';
+		return c;
 	}
 }

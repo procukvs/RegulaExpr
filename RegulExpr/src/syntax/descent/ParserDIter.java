@@ -8,12 +8,13 @@ public class ParserDIter {
 	Letter input;
 	char next;	
 	public ParserDIter(){
-		input = new Letter("0123456789+-*/%()");
+		//input = new Letter("0123456789+-*/%()");
 	}
 	public boolean analys(String word){
-		input.initial(word);
+		//input.initial(word);
+		input = new Letter(word);
 		try{
-			next = input.next();
+			next = input.nextChar();
 			E();
 			match('$');
 		} catch(SyntaxError ex){
@@ -23,27 +24,27 @@ public class ParserDIter {
 		return true;
 	}
 	void E() throws SyntaxError{
-		if(next=='+' || next=='-')next=input.next(); 
+		if(next=='+' || next=='-')next=input.nextChar(); 
 		T();
 		while (next=='+' || next=='-'){
-			next=input.next(); T();
+			next=input.nextChar(); T();
 		}
 	}	
 	void T() throws SyntaxError{
 		F(); 
 		while (next=='*' || next=='/' || next=='%'){
-			next=input.next(); F();
+			next=input.nextChar(); F();
 		}
 	}	
 	void F() throws SyntaxError{
 		if (next=='(' ){
-			next=input.next(); E(); match(')'); 
+			next=input.nextChar(); E(); match(')'); 
 		} 
-		else if(next<='9' && next>='0')	next=input.next();
+		else if(next<='9' && next>='0')	next=input.nextChar();
 	    else throw new SyntaxError("Expecting one from \"0123456789(\", found " + next);	
 	}
 	void match(char c) throws SyntaxError{
-		if(next==c) next=input.next();
+		if(next==c) next=input.nextChar();
 		else throw new SyntaxError("Expecting " + c + ", found " + next);
 	}
 }

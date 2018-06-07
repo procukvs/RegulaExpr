@@ -4,6 +4,7 @@ import syntax.simple.*;
 import syntax.lang.*;
 import syntax.grammar.*;
 import syntax.descent.*; 
+import syntax.expr.*; 
 
 import java.util.*;
 
@@ -12,7 +13,9 @@ public class MainSyntax {
 		// TODO Auto-generated method stub
 		// 0 - grammar
 		// 1 - simple, 2 - GrammarLL1
-		// 3 - language: Expr 
+		// 3 - language: Expr
+		// 4 - recursive-descent
+		// 5 - syntax.expr
 		int work = 4;
 		System.out.println("Hello Syntax ....");
 		switch(work){
@@ -21,9 +24,19 @@ public class MainSyntax {
 		case 2 : grammarLL1(); break;
 		case 3 : langExpr(); break;
 		case 4 : descent(); break;
+		case 5 : syntaxExpr(); break;
 		}
 	}
 
+	public static void syntaxExpr(){
+		String src[] = {"  -9  ",  "  ( 56 -  2) ", " (6 ",  " 9+ (73 -**)", "-23 + 45    * 	( 17 - 5 ) "};
+		Parser p1 = new Parser();
+		System.out.println("Syntax expr... ");
+		for(int i = 0; i<src.length; i++){
+			System.out.println(" expr = " + src[i] + " analys = " + p1.synAnalys(src[i]));
+		}
+	}
+	
 	public static String inString(Set<Character>cs){
 		StringBuilder sb = new StringBuilder();
 		for(char c:cs) sb.append(c);
@@ -144,7 +157,7 @@ public class MainSyntax {
 		ParserExprAST p = new ParserExprAST();		
 		for(int i=0; i<st.length;i++){
 			//System.out.println("... " + st[i] + " analys: " + p.analys(st[i]));
-			AST r = p.analys(st[i]);
+			syntax.lang.AST r = p.analys(st[i]);
 			if (r!=null){
 				System.out.println(r.toString());
 				try{

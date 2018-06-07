@@ -8,13 +8,14 @@ public class ParserDExpr {
 	Letter input;
 	char next;	
 	public ParserDExpr(){
-		input = new Letter("0123456789+-*/%()");
+		//input = new Letter("0123456789+-*/%()");
 	}
 	
 	public boolean analys(String word){
-		input.initial(word);
+		//input.initial(word);
+		input = new Letter(word);
 		try{
-			next = input.next();
+			next = input.nextChar();
 			E(); match('$');
 		} catch(SyntaxError ex){
 			System.out.println("----Syntax ERROR: " + ex.getMessage());
@@ -25,15 +26,15 @@ public class ParserDExpr {
 
 	void E() throws SyntaxError{
 		switch (next){
-		case '+': next=input.next(); T(); A();  break;
-		case '-': next=input.next(); T(); A();  break;
+		case '+': next=input.nextChar(); T(); A();  break;
+		case '-': next=input.nextChar(); T(); A();  break;
 		default:  T(); A(); break;
 		}
 	}	
 	void A() throws SyntaxError{
 		switch (next){
-		case '+': next=input.next(); T(); A();  break;
-		case '-': next=input.next(); T(); A();  break;
+		case '+': next=input.nextChar(); T(); A();  break;
+		case '-': next=input.nextChar(); T(); A();  break;
 		default: break;
 		}		
 	}
@@ -42,21 +43,21 @@ public class ParserDExpr {
 	}	
 	void B() throws SyntaxError{
 		switch (next){
-		case '*': next=input.next(); F(); B();  break;
-		case '/': next=input.next(); F(); B();  break;
-		case '%': next=input.next(); F(); B();  break;		
+		case '*': next=input.nextChar(); F(); B();  break;
+		case '/': next=input.nextChar(); F(); B();  break;
+		case '%': next=input.nextChar(); F(); B();  break;		
 		default: break;
 		}
 	}	
 	void F() throws SyntaxError{
 		if (next=='(' ){
-			next=input.next(); E(); match(')'); 
+			next=input.nextChar(); E(); match(')'); 
 		} 
-		else if(next<='9' && next>='0')	next=input.next();
+		else if(next<='9' && next>='0')	next=input.nextChar();
 	    else throw new SyntaxError("Expecting one from \"0123456789(\", found " + next);
 	}
 	void match(char c) throws SyntaxError{
-		if(next==c) next=input.next();
+		if(next==c) next=input.nextChar();
 		else throw new SyntaxError("Expecting " + c + ", found " + next);
 	}
 }

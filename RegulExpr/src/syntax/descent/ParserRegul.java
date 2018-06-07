@@ -9,16 +9,17 @@ public class ParserRegul {
 	Letter input;
 	char next;	
 	public ParserRegul(){
-		String sl = "()|*+?";
-		for(char i='a'; i<='z';i++ ) sl+=i;
+		//String sl = "()|*+?";
+		//for(char i='a'; i<='z';i++ ) sl+=i;
 		// System.out.println("sl=" + sl); 
-		input = new Letter(sl); //"abcdefghijklmnopqrstuvwxyz()|*+?");
+		//input = new Letter(sl); //"abcdefghijklmnopqrstuvwxyz()|*+?");
 	}
 	
 	public boolean analys(String word){
-		input.initial(word);
+		//input.initial(word);
+		input = new Letter(word);
 		try{
-			next = input.next();
+			next = input.nextChar();
 			E();
 			match('$');
 		} catch(SyntaxError ex){
@@ -32,7 +33,7 @@ public class ParserRegul {
 		//System.out.println("E:next=" + next); 
 		T(); 
 		while(next=='|'){ 
-			next=input.next(); T();
+			next=input.nextChar(); T();
 		} 
 	}	
 	void T() throws SyntaxError{
@@ -45,18 +46,18 @@ public class ParserRegul {
 		//System.out.println("F:next=" + next); 
 		P(); 
 		while (next=='*' || next=='+' || next=='?')
-			next=input.next();
+			next=input.nextChar();
 	}	
 	void P() throws SyntaxError{
 		//System.out.println("P:next=" + next); 
 		if (next=='(' ){
-			next=input.next(); E(); match(')'); 
+			next=input.nextChar(); E(); match(')'); 
 		} 
-		else if(next>='a' && next<='z')	next=input.next();
+		else if(next>='a' && next<='z')	next=input.nextChar();
 	    else throw new SyntaxError("Expecting one from \"abc...xyz(\", found " + next);	
 	}	
 	void match(char c) throws SyntaxError{
-		if(next==c) next=input.next();
+		if(next==c) next=input.nextChar();
 		else throw new SyntaxError("Expecting " + c + ", found " + next);
 	}	
 	
