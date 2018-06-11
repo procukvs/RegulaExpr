@@ -1,5 +1,6 @@
 package syntax.expr;
 
+
 public class Parser {
 	// синтаксичний аналіз виразів з цілими числами і проміжками
 	//    ............ Вхід: рядок (analys) або файл (analysFile)
@@ -11,24 +12,21 @@ public class Parser {
 	//  Numb   ::= digit{digit} --- digit=0..9
 	Lexer input; 
 	Token next;   
-    public Parser() {}
-  
-   /*
+    public Parser() { }
+   
     public boolean analysFile(String file){
-    	if (input.initFile(file)) return synAnalys();
-    	return false;
-    }
+  		input = new Lexer(new SrcFile(file));
+		return synAnalys();
+     }
     
-    public boolean analys(String word){
-		input.initString(word);
+    public boolean analysStr(String word){
+ 		input = new Lexer(new SrcString(word));
 		return synAnalys();
 	}    
-    */      
-    public boolean synAnalys(String src){
+          
+    boolean synAnalys(){
     	try{
-    		input = new Lexer(new Letter(src));
-			next = input.nextToken();
-			//System.out.println("analys: " + next.toString());
+    		next = input.nextToken();
 			expr();
 			match(Lexer.EOFT);
 		} catch(SyntaxError ex){
@@ -39,24 +37,19 @@ public class Parser {
     }
     
     void expr() throws SyntaxError{
-    	//System.out.println("expr: " + next.toString());
-		if(next.type==Lexer.ADDOP) next=input.nextToken(); 
+  		if(next.type==Lexer.ADDOP) next=input.nextToken(); 
 		term();
 		while (next.type==Lexer.ADDOP){
 			next=input.nextToken();  term();
-
 		}
 	}	
 	void term() throws SyntaxError{
-		//System.out.println("term: " +next.toString());
 		factor(); 
 		while (next.type==Lexer.MULOP){
 			next=input.nextToken();  factor();
-			//System.out.println(next.toString());
 		}
 	}	
 	void factor() throws SyntaxError{
-		//System.out.println("factor: " + next.toString());
 		if(next.type == Lexer.LPAREN){
 			next=input.nextToken(); expr(); match(Lexer.RPAREN); 
 		} 
@@ -67,7 +60,6 @@ public class Parser {
 	
 	public void match(int x) throws SyntaxError {
 		if ( next.type == x ) next=input.nextToken(); 
-		else throw new SyntaxError("expecting "+input.getTokenName(x)+
-	                             "; found "+ next);
+		else throw new SyntaxError("expecting "+input.getTokenName(x)+ "; found "+ next);
 	}
 }

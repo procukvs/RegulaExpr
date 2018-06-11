@@ -1,6 +1,6 @@
 package syntax.expr;
 
-public class LexerEx {
+public class LexerOld {
 	// лексичний аналіз виразів з цілими числами і проміжками
 	//    ............ Вхід : рядок 
 	public static final int EOFT = 1;    // represent EOF token type
@@ -13,9 +13,9 @@ public class LexerEx {
 	        { "n/a", "<EOF>", "NUMB", "LPAREN", "RPAREN", "ADDOP", "MULOP" };
     
     char c;       // current character
-    Source input; 
+    Letter input; 
    	
-	public LexerEx(Source src) { input = src; consume(); }
+	public LexerOld(Letter src) { input = src; consume(); }
 	public String getTokenName(int x) { return tokenNames[x]; }
 	
 	void consume(){ c = input.nextChar(); }

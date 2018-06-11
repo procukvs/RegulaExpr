@@ -1,11 +1,11 @@
 package syntax.descent;
 
-public class ParserDG {
+public class ParserG {
 	Letter input;
 	char next;
 	// S -> aSbA | b 
 	// A -> baAS | a
-	public ParserDG(){
+	public ParserG(){
 		//input = new Letter("ab");
 	}
 	public boolean analys(String word){
@@ -21,16 +21,16 @@ public class ParserDG {
 		return true;
 	}
 	void S() throws SyntaxError{
-		switch (next){
-		case 'a': next=input.nextChar(); S();match('b'); A();  break;
-		default: match('b');
+		if(next=='a'){
+			next=input.nextChar(); S();match('b'); A();
 		}
+		else match('b');
 	}
 	void A() throws SyntaxError{
-		switch (next){
-		case 'b': next=input.nextChar();  match('a'); A(); S(); break;
-		default: match('a');
+		if(next=='b'){
+			next=input.nextChar();  match('a'); A(); S();
 		}
+		else match('a');
 	}	
 	void match(char c) throws SyntaxError{
 		if(next==c) next=input.nextChar();

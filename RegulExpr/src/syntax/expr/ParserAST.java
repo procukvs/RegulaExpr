@@ -1,36 +1,33 @@
 package syntax.expr;
 
-
-public class ParserEx {
+public class ParserAST {
 	// синтаксичний аналіз виразів з цілими числами і проміжками
-	//    ............ Вхід: рядок (analys) або файл (analysFile)
+	//    .... Вхід: рядок (synAnalys) і вихід AST 
 	//  expr   ::= [AddOp] term { AddOp term}
 	//  term   ::= factor { MulOp factor}
 	//  factor ::= '(' expr ')' | Numb
 	//  AddOp  ::= '+' | '-'
 	//  MulOp  ::= '*' | '/' | '%'
 	//  Numb   ::= digit{digit} --- digit=0..9
-	LexerEx input; 
+	Lexer input; 
 	Token next;   
-    public ParserEx() { }
-   
+    public ParserAST() { }
+  
     public AST analysFile(String file){
-  		input = new LexerEx(new SrcFile(file));
+  		input = new Lexer(new SrcFile(file));
 		return synAnalys();
      }
     
-    public AST analysStr(String word){
- 		input = new LexerEx(new SrcString(word));
+    public AST analysStr(String src){
+ 		input = new Lexer(new SrcString(src));
 		return synAnalys();
 	}    
-          
+     
     AST synAnalys(){
     	AST t;
-	 	try{
+ 	 	try{
 			next = input.nextToken();
-			//System.out.println("analys: " + next.toString());
-			t=expr();
-			match(LexerEx.EOFT);
+			t=expr(); match(Lexer.EOFT);
 		} catch(SyntaxError ex){
 			System.out.println("----Syntax ERROR: " + ex.getMessage());
 			return null;
@@ -39,40 +36,33 @@ public class ParserEx {
     }
     
     AST expr() throws SyntaxError{
-  		AST t,t1;
-      	//System.out.println("expr: " + next.toString());
-  		t = null;
-  		if(next.type==LexerEx.ADDOP) {
+  		AST t = null,t1;
+   		if(next.type==Lexer.ADDOP) {
   			if (next.text.equals("-")) t= new AST(next); 
   			next=input.nextToken();
   		}
   		if (t==null) t=term(); else t.addSon(term());
-  		while (next.type==LexerEx.ADDOP){
+  		while (next.type==Lexer.ADDOP){
   			t1 = new AST(next);	next=input.nextToken();
-  			t1.addSon(t); t1.addSon(term());
-  			t=t1;
+  			t1.addSon(t); t1.addSon(term()); t=t1;
   		}
   		return t;
   	}	
 	AST term() throws SyntaxError{
 		AST t,t1;
-		//System.out.println("term: " +next.toString());
 		t = factor(); 
-		while (next.type==LexerEx.MULOP){
+		while (next.type==Lexer.MULOP){
 			t1 = new AST(next);	next=input.nextToken();
-			t1.addSon(t); t1.addSon(factor()); 
-			t=t1;
-			//System.out.println(next.toString());
+			t1.addSon(t); t1.addSon(factor()); 	t=t1;
 		}
 		return t;
 	}	 
 	AST factor() throws SyntaxError{
 		AST t=null;
-		//System.out.println("factor: " + next.toString());
-		if(next.type == LexerEx.LPAREN){
-			next=input.nextToken(); t=expr(); match(LexerEx.RPAREN); 
+		if(next.type == Lexer.LPAREN){
+			next=input.nextToken(); t=expr(); match(Lexer.RPAREN); 
 		} 
-		else if (next.type == LexerEx.NUMB) {
+		else if (next.type == Lexer.NUMB) {
 			t = new AST(next); next=input.nextToken(); 
 		}
 		else 
@@ -81,7 +71,6 @@ public class ParserEx {
 	}      
 	void match(int x) throws SyntaxError {
 		if ( next.type == x ) next=input.nextToken(); 
-		else throw new SyntaxError("expecting "+input.getTokenName(x)+
-	                             "; found "+ next);
+		else throw new SyntaxError("expecting "+input.getTokenName(x)+ "; found "+ next);
 	}
 }

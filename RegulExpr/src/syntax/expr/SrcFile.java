@@ -2,7 +2,7 @@ package syntax.expr;
 
 import java.io.*;
 
-public class SrcFile implements Source {
+public class SrcFile implements Letter {
 	BufferedReader r;
 	String input; // input string
 	int p;        // index into input of current character
@@ -13,7 +13,7 @@ public class SrcFile implements Source {
 			r = new BufferedReader( new FileReader(name));
 			inputLine();  consume();
 		} catch(Exception e) {
-			System.out.println(">>>: Lexer.open.file:  " + e.getMessage());	
+			System.out.println(">>>: SrcFile open file " + name + ":  " + e.getMessage());	
 			input = null; c=EOF;
 		}
     }
@@ -29,7 +29,7 @@ public class SrcFile implements Source {
 	  			System.out.println(">>>:" + input + "..");  
 	  			if (input==null) c=EOF;
 	   		} catch(Exception e) {
-	  			System.out.println(">>>: Lexer.input " + e.getMessage());	
+	  			System.out.println(">>>: SrcFile: inputLine " + e.getMessage());	
 	   		}	
 	  	} else c=EOF;
 	}

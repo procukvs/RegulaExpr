@@ -1,13 +1,13 @@
 package syntax.descent;
 
-public class ParserDIter {
+public class ParserIter {
 	// повний арифметичний вираз з цифр (0..9), дужок () і операцій +-*/%
-	// E -> ['+' | '-'] T {('-' | '+') T} 
+	// S -> ['+' | '-'] T {('-' | '+') T} 
 	// T -> F {('*' | '/' | '%') F}        
-	// F -> (E) | '0' | .. | '9'   
+	// F -> (S) | '0' | .. | '9'   
 	Letter input;
 	char next;	
-	public ParserDIter(){
+	public ParserIter(){
 		//input = new Letter("0123456789+-*/%()");
 	}
 	public boolean analys(String word){
@@ -15,7 +15,7 @@ public class ParserDIter {
 		input = new Letter(word);
 		try{
 			next = input.nextChar();
-			E();
+			S();
 			match('$');
 		} catch(SyntaxError ex){
 			System.out.println("----Syntax ERROR: " + ex.getMessage());
@@ -23,7 +23,7 @@ public class ParserDIter {
 		}
 		return true;
 	}
-	void E() throws SyntaxError{
+	void S() throws SyntaxError{
 		if(next=='+' || next=='-')next=input.nextChar(); 
 		T();
 		while (next=='+' || next=='-'){
@@ -38,7 +38,7 @@ public class ParserDIter {
 	}	
 	void F() throws SyntaxError{
 		if (next=='(' ){
-			next=input.nextChar(); E(); match(')'); 
+			next=input.nextChar(); S(); match(')'); 
 		} 
 		else if(next<='9' && next>='0')	next=input.nextChar();
 	    else throw new SyntaxError("Expecting one from \"0123456789(\", found " + next);	

@@ -1,13 +1,14 @@
 package syntax.descent;
 
-public class ParserDExpr {
+public class ParserExpr {
 	// повний арифметичний вираз з цифр (0..9), дужок () і операцій +-*/%
-	// E -> +TA | -TA | TA   A -> +TA | -TA | Eps    .... 1-6
-	// T -> FB    B -> *FB | /FB | %FB | Eps         .... 7-11
-	// F -> (E) | 0 | .. | 9                         .... 12-22
+	// S -> +E | -E | E                      ...  1-3
+	// E -> TA   A -> +TA | -TA | Eps        .... 4-7
+	// T -> FB   B -> *FB | /FB | %FB | Eps  .... 8-12
+	// F -> (S) | 0 | .. | 9                 .... 13-23
 	Letter input;
 	char next;	
-	public ParserDExpr(){
+	public ParserExpr(){
 		//input = new Letter("0123456789+-*/%()");
 	}
 	
@@ -16,42 +17,47 @@ public class ParserDExpr {
 		input = new Letter(word);
 		try{
 			next = input.nextChar();
-			E(); match('$');
+			S(); match('$');
 		} catch(SyntaxError ex){
 			System.out.println("----Syntax ERROR: " + ex.getMessage());
 			return false;
 		}
 		return true;
 	}
-
-	void E() throws SyntaxError{
-		switch (next){
-		case '+': next=input.nextChar(); T(); A();  break;
-		case '-': next=input.nextChar(); T(); A();  break;
-		default:  T(); A(); break;
+	void S() throws SyntaxError{
+		if(next=='+'){
+			next=input.nextChar(); E();
+		} else if(next=='-'){
+			next=input.nextChar(); E();
 		}
+		else E();
+	}	
+	void E() throws SyntaxError{
+		T(); A(); 
 	}	
 	void A() throws SyntaxError{
-		switch (next){
-		case '+': next=input.nextChar(); T(); A();  break;
-		case '-': next=input.nextChar(); T(); A();  break;
-		default: break;
-		}		
+		if(next=='+'){
+			next=input.nextChar(); T(); A();
+		} else if(next=='-'){
+			next=input.nextChar(); T(); A();
+		}
 	}
 	void T() throws SyntaxError{
 		F(); B();
 	}	
 	void B() throws SyntaxError{
-		switch (next){
-		case '*': next=input.nextChar(); F(); B();  break;
-		case '/': next=input.nextChar(); F(); B();  break;
-		case '%': next=input.nextChar(); F(); B();  break;		
-		default: break;
+		if(next=='*'){
+			next=input.nextChar(); F(); B(); 
+		} else if(next=='/'){
+			next=input.nextChar(); F(); B(); 
+		}
+		else if(next=='%'){
+			next=input.nextChar(); F(); B(); 
 		}
 	}	
 	void F() throws SyntaxError{
 		if (next=='(' ){
-			next=input.nextChar(); E(); match(')'); 
+			next=input.nextChar(); S(); match(')'); 
 		} 
 		else if(next<='9' && next>='0')	next=input.nextChar();
 	    else throw new SyntaxError("Expecting one from \"0123456789(\", found " + next);

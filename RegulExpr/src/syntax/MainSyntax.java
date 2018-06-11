@@ -16,7 +16,7 @@ public class MainSyntax {
 		// 3 - language: Expr
 		// 4 - recursive-descent
 		// 5 - syntax.expr
-		int work = 4;
+		int work = 5;
 		System.out.println("Hello Syntax ....");
 		switch(work){
 		case 0: workGrammar(); break;
@@ -29,12 +29,36 @@ public class MainSyntax {
 	}
 
 	public static void syntaxExpr(){
-		String src[] = {"  -9  ",  "  ( 56 -  2) ", " (6 ",  " 9+ (73 -**)", "-23 + 45    * 	( 17 - 5 ) "};
+		String src[] = {"  -9  ",  "  ( 56 -  2) ", " (6 ",  " 9+ (73 -**)", "\t-23 + 45    * \n	( 17 - 5 ) "};
+		// 1 version Letter -> Lexer -> Parser only from STRING
+		/*
 		Parser p1 = new Parser();
 		System.out.println("Syntax expr... ");
 		for(int i = 0; i<src.length; i++){
 			System.out.println(" expr = " + src[i] + " analys = " + p1.synAnalys(src[i]));
 		}
+		*/
+		// 2 version  Letter=>LetterOld:
+		//     Letter-interface + SrcFile + SrcString
+		//     Parser --> analysFile(file) + analysStr(word)
+		System.out.println("---------------------------------");
+		System.out.println("Syntax expr...  any Source .. ");
+		Parser pEx = new Parser();
+		for(int i = 0; i<src.length; i++){
+			System.out.println(" expr = " + src[i] + " analys = " + pEx.analysStr(src[i]));
+		}
+		System.out.println("---------------------------------");
+		System.out.println(" Analys file test.txt = " + pEx.analysFile("test.txt"));
+		
+		ParserAST pAST = new ParserAST();
+		System.out.println("Syntax expr...  AST .... ");
+		for(int i = 0; i<src.length; i++){
+			syntax.expr.AST tr = pAST.analysStr(src[i]);
+			System.out.println(" expr = " + src[i] + " analys = " + tr);
+			if (tr!=null) System.out.println("........ value expr = " + tr.evalExpr());
+		}
+		
+		
 	}
 	
 	public static String inString(Set<Character>cs){
@@ -50,8 +74,8 @@ public class MainSyntax {
 		String[] rS2 = {"aSa", "bSb", ""};
 		char[] lS3 = {'S', 'S', 'S'};
 		String[] rS3 = {"aSa", "bSb", "c"};	
-		char[] lS4 = {'S','S','S','T','T','T','T','F','F'};
-		String[] rS4 ={"S+T","S-T", "T", "T*F", "T/F", "T%F", "F", "(S)","d"};
+		char[] lS4 = {'S', 'S', 'S', 'E','E','E','T','T','T','T','F','F'};
+		String[] rS4 ={"+E", "-E", "E", "E+T","E-T", "T", "T*F", "T/F", "T%F", "F", "(S)","d"};
 		String[] name = {"sExpr", "nPal", "lPal", "fullExpr"};
 		GrammarLL1[] gram = {new GrammarLL1(lS1,rS1), new GrammarLL1(lS2,rS2),
 					         new GrammarLL1(lS3,rS3), new GrammarLL1(lS4,rS4)};
@@ -215,11 +239,11 @@ public class MainSyntax {
 		System.out.println("Recursive descent ....");
 		//String[] st = new String[]{"c", "abba", "abb", "abbbaab"}; 
 		//ParserDG p = new ParserDG();
-		String[] st = new String[]{"0", "(1)", "a", "(((7+5)))", "6-6+7-9+(5)", "((9+1)*4+7)%5*6",
+		String[] st = new String[]{"0", "-(+1)", "a", "(((7+5)))", "6-6+7-9+(5)", "((9+1)*4+7)%5*6",
                 "+-2","+2", "-6*5/3-2"}; 
-        //ParserDExpr p = new ParserDExpr();		
-		//ParserDIter p = new ParserDIter();
-		ParserDEval p = new ParserDEval();
+		//syntax.descent.ParserExpr p = new syntax.descent.ParserExpr();		
+		ParserIter p = new ParserIter();
+		//ParserDEval p = new ParserDEval();
 		//String[] st = new String[]{"a", "(a)","(x|y)(a|b)", "xb*", "(ab|c)*", "(a?)a", "(ab)?d+", "(ab|c*", "(ab|c*)"}; 
 		//ParserRegul p = new ParserRegul();
 		for(int i=0; i<st.length;i++)

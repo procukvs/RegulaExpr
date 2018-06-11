@@ -5,9 +5,11 @@ import java.util.*;
 public class AST {
 	Token root;
 	List<AST> sons; 
+	/*
 	public AST(){    // leaf Eps !!
 		root=null; sons=null;
 	}
+	*/
 	public AST(Token c){   
 		root=c; sons=null;
 	}	
@@ -38,24 +40,22 @@ public class AST {
 	public int evalExpr(){
 		int res,op1,op2;
 		switch(root.type){
-		case LexerEx.ADDOP:
+		case Lexer.ADDOP:
 			op1=sons.get(0).evalExpr();
 			if (sons.size()==2){
 				op2=sons.get(1).evalExpr(); 
 				if (root.text.equals("-")) res=op1-op2; else res=op1+op2;   
-			} else {
-				res=-op1;
-			}; break;
-		case LexerEx.MULOP: 
+			} else res=-op1;
+			break;
+		case Lexer.MULOP: 
 			op1=sons.get(0).evalExpr();
 			op2=sons.get(1).evalExpr();
 			if (!root.text.equals("*")){
 				if(op2==0)throw new Error("В операції " + root.text + " дільник = 0");
 				if (root.text.equals("/")) res=op1/op2; else res=op1%op2;  
-			} else{
-				res= op1*op2; 
-			}; break;
-		case LexerEx.NUMB: res=evalNumber(root.text); break;	
+			} else res= op1*op2; 
+			break;
+		case Lexer.NUMB: res=evalNumber(root.text); break;	
 		default: throw new Error("Неочікувана лексема " + root.toString());
 		}
 		return res;
