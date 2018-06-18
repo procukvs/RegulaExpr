@@ -50,11 +50,12 @@ public class MainLambda {
 	
 	public static void libraryWork(){
 		TestLambda tl = new TestLambda();
-		StreamWork sw = new StreamWork();
+		LibraryWork sw = new LibraryWork();
 		ArrayList <Book> library = tl.library();
 		for(int i=0; i<library.size(); i++){
 			System.out.println(library.get(i).toString());
 		}
+		//Stream<Book> sbt = library.stream();
 		Map <String, Integer> cntBooksC = sw.numberOfBooksC(library.stream());
 		System.out.println(" Counts books in publishers (Col): " + cntBooksC.toString());
 		Map <String, Long> cntBooksS = sw.numberOfBooksS(library.stream());
@@ -63,14 +64,16 @@ public class MainLambda {
 		System.out.println(" Name books in publishers (Col): " + nameBooksC.toString());
 		Map <String, List<String>> nameBooksS = sw.nameOfBooksS(library.stream());
 		System.out.println(" Name books in publishers (Str): " + nameBooksS.toString());
-		
+		Set<String> allAut = sw.allAuthors(library.stream());
+		System.out.println(" All Authors = " + allAut);
+		/*
 		System.out.println("Use array+regular");
 		String[] ib = tl.libraryStr();
 		for(String s:ib)System.out.println(s);
 		Stream <Book>  bs = Stream.of(ib).map(Book::new); 
 		Map <String, Long> cntBooksSAr = sw.numberOfBooksS(bs);
 		System.out.println(" Counts books in publishers (ColArr): " + cntBooksSAr.toString());
-		
+		*/
 	}
 
 }

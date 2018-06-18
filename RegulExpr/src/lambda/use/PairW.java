@@ -1,10 +1,10 @@
 package lambda.use;
 
-public class Pair {
+public class PairW {
 	int x, y;
-	Pair(){ x=0; y=0;}
+	PairW(){ x=0; y=0;}
 	
-	Pair(int xi, int yi){
+	PairW(int xi, int yi){
 		x=xi; y=yi;
 	}
 	public int getX() {

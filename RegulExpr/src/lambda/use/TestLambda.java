@@ -10,7 +10,7 @@ public class TestLambda {
 	public  ArrayList <Book> library(){
 		books = new ArrayList <> ();
 		aut = new ArrayList<> (1);
-		aut.add("Buchman S."); 
+		aut.add("Buchman S."); aut.add("Heydemark W."); 
 		ts = new TreeSet();	ts.add("history"); ts.add("biography");
 		books.add(new Book(aut,"1977!", 140, ts, "Abatis Publishers"));
 		ts = new TreeSet();	ts.add("history");
@@ -61,7 +61,7 @@ public class TestLambda {
 	
 	public String[] libraryStr(){
 		String[] informS = 
-			{"Buchman S. , 1977! , 140,  history: biography , Abatis Publishers ",
+			{"Buchman S. : Heydemark W. , 1977! , 140,  history: biography , Abatis Publishers ",
 			 "Buchman S. , 200 Years of German Humor , 107, history  , Schadenfreude Press ",
 			 "Hull H. : Hull K. , But I Did It Unconsciously , 510  , psychology  , Abatis Publishers "
 			}; 

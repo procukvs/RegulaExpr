@@ -8,12 +8,12 @@ import lambda.use.*;
 
 public class StreamWorkTest {
 	static private TestLambda tl;
-	static private StreamWork sw;
+	static private LibraryWork sw;
 	static private ArrayList <Book> library;
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		tl = new TestLambda();
-		sw = new StreamWork();
+		sw = new LibraryWork();
 		library = tl.library();
 	}
 

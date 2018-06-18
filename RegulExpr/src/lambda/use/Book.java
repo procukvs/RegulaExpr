@@ -14,7 +14,7 @@ public class Book {
 	
 	
 	public Book(ArrayList<String> authors, String titleName, int pages, Set<String> types,  String pubName) {
-		super();
+		//super();
 		this.authors = authors;
 		this.titleName = titleName;
 		this.types = types;

@@ -4,13 +4,25 @@ import java.util.*;
 import java.util.Map.*;
 import java.util.stream.*;
 
-public class StreamWork {
+public class LibraryWork {
+	// загальна кількість книг в бібліотеці
+	public long countAllBooks(Stream <Book> library){
+		return library.collect(Collectors.counting());
+		//return library.count();
+	}
+		
+	// множина всіх авторів, книги яких є в бібліотеці
+	public Set<String> allAuthors(Stream <Book> library){
+		//Stream<String> sa = library.flatMap(x->x.getAuthors().stream());
+		return library.flatMap(x->x.getAuthors().stream())   
+				      .collect(Collectors.toSet());
+	}
 	
 	//   5.13  +  5.14 
 	// кількість книг випущених кожним видавництвом
 	public Map <String, Integer> numberOfBooksC(Stream <Book> library){
 		Map<String, List<Book>> booksByPublishes =
-				library.collect(Collectors.groupingBy(book->book.getPubName()));
+				library.collect(Collectors.groupingBy(book->book.getPubName()));  // (Book::getPubName) (book->book.getPubName())
 		Map <String, Integer> numberOfBooks = new HashMap<>();
 		for(Entry <String, List<Book>> entry : booksByPublishes.entrySet()){
 			numberOfBooks.put(entry.getKey(), entry.getValue().size());
@@ -19,7 +31,7 @@ public class StreamWork {
 	}
 	
 	public Map <String, Long> numberOfBooksS(Stream <Book> library){
-		return library.collect(Collectors.groupingBy(book->book.getPubName(),
+		return library.collect(Collectors.groupingBy(Book::getPubName, // (Book::getPubName) book->book.getPubName()
 				                      Collectors.counting()));
 	}
 	
@@ -32,14 +44,17 @@ public class StreamWork {
 		for(Entry <String, List<Book>> entry : booksByPublishes.entrySet()){
 			nameOfBooks.put(entry.getKey(), entry.getValue()
 					                             .stream()
-					                             .map(Book::getTitleName)
+					                             .map(b->b.getTitleName())  //(Book::getTitleName)
 					                             .collect(Collectors.toList()));
 		}
 		return nameOfBooks;
 	}
 	public Map <String, List<String>> nameOfBooksS(Stream <Book> library){
-		return library.collect(Collectors.groupingBy(book->book.getPubName(),
-                               Collectors.mapping(Book::getTitleName,
+		return library.collect(Collectors.groupingBy(book->book.getPubName(), // Book::getPubName
+                               Collectors.mapping(b->b.getTitleName(),        //Book::getTitleName,
                                Collectors.toList())));
 	}
+	
+	
+	
 }
